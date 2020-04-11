@@ -6,8 +6,8 @@ INSERT INTO public.authority VALUES ('dfd2440e-eddf-488a-b4a7-225b6e21a484', 'US
 INSERT INTO public.authority VALUES ('c40a573a-a6bd-413f-b573-64338770e261', 'USER_DELETE');
 
 
-INSERT INTO public.role VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', 'ADMIN');
-INSERT INTO public.role VALUES ('a807f074-53bc-4aa7-a6d2-341928b7dd2a', 'USER');
+INSERT INTO public.role VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', 'ADMIN_USER');
+INSERT INTO public.role VALUES ('a807f074-53bc-4aa7-a6d2-341928b7dd2a', 'BASIC_USER');
 
 
 INSERT INTO public.role_authority VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', '4da5473b-09b4-4941-9556-e75f439ccc39');

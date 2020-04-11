@@ -8,7 +8,7 @@ public interface ExtendedService<T extends ExtendedEntity> {
 
 	T updateById(String id, T entity);
 
-	void deleteById(String id);
+	Void deleteById(String id);
 
 	List<T> findAll();
 

@@ -21,12 +21,13 @@ public abstract class ExtendedServiceImpl<T extends ExtendedEntity> implements E
 	}
 
 	@Override
-	public void deleteById(String id) throws NoSuchElementException {
+	public Void deleteById(String id) throws NoSuchElementException {
 		if(repository.existsById(id)) {
 			repository.deleteById(id);
 		} else {
 			throw new NoSuchElementException(String.format("Entity with ID '%s' could not be found", id));
 		}
+		return null;
 	}
 
 	@Override

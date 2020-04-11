@@ -1,5 +1,9 @@
 package ch.course223.advanced.domainmodels.user.mapper;
 
+import ch.course223.advanced.domainmodels.authority.Authority;
+import ch.course223.advanced.domainmodels.authority.AuthorityDTO;
+import ch.course223.advanced.domainmodels.role.Role;
+import ch.course223.advanced.domainmodels.role.RoleDTO;
 import ch.course223.advanced.domainmodels.user.User;
 import ch.course223.advanced.domainmodels.user.UserDTO;
 import java.util.ArrayList;
@@ -11,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2020-04-11T12:09:57+0200",
+    date = "2020-04-11T13:24:19+0200",
     comments = "version: 1.3.0.Final, compiler: javac, environment: Java 13.0.1 (Private Build)"
 )
 @Component
@@ -28,6 +32,8 @@ public class UserMapperImpl implements UserMapper {
         user.setId( dto.getId() );
         user.setFirstName( dto.getFirstName() );
         user.setLastName( dto.getLastName() );
+        user.setEmail( dto.getEmail() );
+        user.setRoles( roleDTOSetToRoleSet( dto.getRoles() ) );
 
         return user;
     }
@@ -71,6 +77,8 @@ public class UserMapperImpl implements UserMapper {
         userDTO.setId( dm.getId() );
         userDTO.setFirstName( dm.getFirstName() );
         userDTO.setLastName( dm.getLastName() );
+        userDTO.setEmail( dm.getEmail() );
+        userDTO.setRoles( roleSetToRoleDTOSet( dm.getRoles() ) );
 
         return userDTO;
     }
@@ -101,5 +109,111 @@ public class UserMapperImpl implements UserMapper {
         }
 
         return set;
+    }
+
+    protected Authority authorityDTOToAuthority(AuthorityDTO authorityDTO) {
+        if ( authorityDTO == null ) {
+            return null;
+        }
+
+        Authority authority = new Authority();
+
+        authority.setId( authorityDTO.getId() );
+        authority.setName( authorityDTO.getName() );
+
+        return authority;
+    }
+
+    protected Set<Authority> authorityDTOSetToAuthoritySet(Set<AuthorityDTO> set) {
+        if ( set == null ) {
+            return null;
+        }
+
+        Set<Authority> set1 = new HashSet<Authority>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
+        for ( AuthorityDTO authorityDTO : set ) {
+            set1.add( authorityDTOToAuthority( authorityDTO ) );
+        }
+
+        return set1;
+    }
+
+    protected Role roleDTOToRole(RoleDTO roleDTO) {
+        if ( roleDTO == null ) {
+            return null;
+        }
+
+        Role role = new Role();
+
+        role.setId( roleDTO.getId() );
+        role.setName( roleDTO.getName() );
+        role.setAuthorities( authorityDTOSetToAuthoritySet( roleDTO.getAuthorities() ) );
+
+        return role;
+    }
+
+    protected Set<Role> roleDTOSetToRoleSet(Set<RoleDTO> set) {
+        if ( set == null ) {
+            return null;
+        }
+
+        Set<Role> set1 = new HashSet<Role>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
+        for ( RoleDTO roleDTO : set ) {
+            set1.add( roleDTOToRole( roleDTO ) );
+        }
+
+        return set1;
+    }
+
+    protected AuthorityDTO authorityToAuthorityDTO(Authority authority) {
+        if ( authority == null ) {
+            return null;
+        }
+
+        AuthorityDTO authorityDTO = new AuthorityDTO();
+
+        authorityDTO.setId( authority.getId() );
+        authorityDTO.setName( authority.getName() );
+
+        return authorityDTO;
+    }
+
+    protected Set<AuthorityDTO> authoritySetToAuthorityDTOSet(Set<Authority> set) {
+        if ( set == null ) {
+            return null;
+        }
+
+        Set<AuthorityDTO> set1 = new HashSet<AuthorityDTO>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
+        for ( Authority authority : set ) {
+            set1.add( authorityToAuthorityDTO( authority ) );
+        }
+
+        return set1;
+    }
+
+    protected RoleDTO roleToRoleDTO(Role role) {
+        if ( role == null ) {
+            return null;
+        }
+
+        RoleDTO roleDTO = new RoleDTO();
+
+        roleDTO.setId( role.getId() );
+        roleDTO.setName( role.getName() );
+        roleDTO.setAuthorities( authoritySetToAuthorityDTOSet( role.getAuthorities() ) );
+
+        return roleDTO;
+    }
+
+    protected Set<RoleDTO> roleSetToRoleDTOSet(Set<Role> set) {
+        if ( set == null ) {
+            return null;
+        }
+
+        Set<RoleDTO> set1 = new HashSet<RoleDTO>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
+        for ( Role role : set ) {
+            set1.add( roleToRoleDTO( role ) );
+        }
+
+        return set1;
     }
 }
