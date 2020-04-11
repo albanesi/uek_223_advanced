@@ -9,6 +9,8 @@ import ch.course223.advanced.domainmodels.user.UserDTO;
 import ch.course223.advanced.domainmodels.user.UserService;
 import ch.course223.advanced.error.BadRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonArrayFormatVisitor;
+import net.minidev.json.JSONArray;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,9 +56,11 @@ public class UserController {
     @Test
     @WithMockUser(roles = {"BASIC_USER"})
     public void findById_requestUserById_returnsUser() throws Exception {
+
         Set<Authority> basicUserAuthorities = new HashSet<Authority>();
         basicUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
         basicUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
+
 
         Set<Role> basicUserRoles = new HashSet<Role>();
         basicUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
@@ -77,9 +81,9 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(basicUser.getFirstName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(basicUser.getLastName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(basicUser.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles").value(Matchers.arrayContaining(basicUserRoles.toArray())));
-             //   .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].authorities").value(Matchers.arrayContaining(basicUserAuthorities.toArray())));
-
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.contains(basicUserRoles.stream().map(Role::getName).toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.contains(basicUserAuthorities.stream().map(Authority::getName).toArray())));
+                //.andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.contains("BASIC_USER", "BASIC_USER")));
 
         ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
         verify(userService, times(1)).findById(stringCaptor.capture());
