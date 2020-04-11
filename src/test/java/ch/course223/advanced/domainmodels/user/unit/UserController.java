@@ -9,6 +9,7 @@ import ch.course223.advanced.domainmodels.user.UserDTO;
 import ch.course223.advanced.domainmodels.user.UserService;
 import ch.course223.advanced.error.BadRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -47,8 +49,46 @@ public class UserController {
 
     @Before
     public void setUp(){
+    }
 
-        //Business Objects (used in findById, findAll)
+    @Test
+    @WithMockUser(roles = {"BASIC_USER"})
+    public void findById_requestUserById_returnsUser() throws Exception {
+        Set<Authority> basicUserAuthorities = new HashSet<Authority>();
+        basicUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
+        basicUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
+
+        Set<Role> basicUserRoles = new HashSet<Role>();
+        basicUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
+
+        User basicUser = new User().setRoles(basicUserRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+
+        given(userService.findById(anyString())).will(invocation -> {
+            if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
+            return (basicUser);
+        });
+
+        UUID uuid = UUID.randomUUID();
+
+        mvc.perform(
+                MockMvcRequestBuilders.get("/users/{id}", uuid.toString())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(basicUser.getFirstName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(basicUser.getLastName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(basicUser.getEmail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles").value(Matchers.arrayContaining(basicUserRoles.toArray())));
+             //   .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].authorities").value(Matchers.arrayContaining(basicUserAuthorities.toArray())));
+
+
+        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+        verify(userService, times(1)).findById(stringCaptor.capture());
+        assertThat(stringCaptor.getValue().equals(uuid.toString()));
+    }
+
+    @Test
+    @WithMockUser
+    public void findAll_requestAllUsers_returnsAllUsers() throws Exception {
         Set<Authority> basicUserAuthorities = new HashSet<Authority>();
         basicUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
         basicUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
@@ -70,56 +110,8 @@ public class UserController {
         User adminUser = new User().setRoles(adminUserRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
         User basicUser = new User().setRoles(basicUserRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
 
-        //Mocks
-        given(userService.findById(anyString())).will(invocation -> {
-            if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
-            return (basicUser);
-        });
-
         given(userService.findAll()).willReturn(Arrays.asList(adminUser, basicUser));
 
-        given(userService.save(any(User.class))).will(invocation -> {
-            if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
-            UUID uuid = UUID.randomUUID();
-            User userDTO = invocation.getArgument(0);
-            return userDTO.setId(uuid.toString());
-        });
-
-        given(userService.updateById(anyString(), any(User.class))).will(invocation -> {
-            if ("non-existent".equals(invocation.getArgument(0)) || "non-existent".equals(invocation.getArgument(1))) throw new BadRequestException();
-            return ((User) invocation.getArgument(1)).setId(invocation.getArgument(0));
-        });
-
-        given(userService.deleteById(anyString())).will(invocation -> {
-            if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
-            return null;
-        });
-
-    }
-
-    @Test
-    @WithMockUser(roles = {"BASIC_USER"})
-    public void findById_requestUserById_returnsUser() throws Exception {
-        UUID uuid = UUID.randomUUID();
-        mvc.perform(
-                MockMvcRequestBuilders.get("/users/{id}", uuid.toString())
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("jane"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("doe"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("jane.doe@noseryoung.ch"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].name").value("BASIC_USER"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
-
-        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
-        verify(userService, times(1)).findById(stringCaptor.capture());
-        assertThat(stringCaptor.getValue().equals(uuid.toString()));
-    }
-
-    @Test
-    @WithMockUser
-    public void findAll_requestAllUsers_returnsAllUsers() throws Exception {
         mvc.perform(
                 MockMvcRequestBuilders.get("/users")
                         .accept(MediaType.APPLICATION_JSON))
@@ -148,6 +140,14 @@ public class UserController {
     @Test
     @WithMockUser
     public void create_deliverUserDTOToCreate_returnCreatedUserDTO() throws Exception {
+        given(userService.save(any(User.class))).will(invocation -> {
+            if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
+            UUID uuid = UUID.randomUUID();
+            User userDTO = invocation.getArgument(0);
+            return userDTO.setId(uuid.toString());
+        });
+
+
         Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
@@ -186,6 +186,11 @@ public class UserController {
     @Test
     @WithMockUser
     public void updateUserById_deliverUserDTOToUpdate_returnUpdatedUserDTO() throws Exception {
+        given(userService.updateById(anyString(), any(User.class))).will(invocation -> {
+            if ("non-existent".equals(invocation.getArgument(0)) || "non-existent".equals(invocation.getArgument(1))) throw new BadRequestException();
+            return ((User) invocation.getArgument(1)).setId(invocation.getArgument(0));
+        });
+
         UUID uuid = UUID.randomUUID();
         Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
@@ -225,6 +230,12 @@ public class UserController {
     @Test
     @WithMockUser
     public void deleteUserById_requestADeletionOfUserById_returnAppropriateState() throws Exception {
+
+        given(userService.deleteById(anyString())).will(invocation -> {
+            if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
+            return null;
+        });
+
         UUID uuid = UUID.randomUUID();
 
         mvc.perform(
