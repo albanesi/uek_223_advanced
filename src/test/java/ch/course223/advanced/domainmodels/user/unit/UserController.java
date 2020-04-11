@@ -97,11 +97,13 @@ public class UserController {
         ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
         verify(userService, times(1)).findById(stringCaptor.capture());
         assertThat(stringCaptor.getValue().equals(uuid.toString()));
+
     }
 
     @Test
     @WithMockUser
     public void findAll_requestAllUsers_returnsAllUsers() throws Exception {
+
         Set<Authority> basicUserAuthorities = new HashSet<Authority>();
         basicUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
         basicUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
@@ -137,11 +139,13 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(adminUserAuthorities.stream().map(Authority::getName).toArray(), basicUserAuthorities.stream().map(Authority::getName).toArray()))));
 
         verify(userService, times(1)).findAll();
+
     }
 
     @Test
     @WithMockUser
     public void create_deliverUserDTOToCreate_returnCreatedUserDTO() throws Exception {
+
         given(userService.save(any(User.class))).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
             UUID uuid = UUID.randomUUID();
@@ -182,12 +186,13 @@ public class UserController {
         assertThat(userCaptor.getValue().getEmail().equals("jane.doe@noseryoung.ch"));
         assertThat(userCaptor.getValue().getRoles().iterator().next().getName().equals("USER_SEE_OWN"));
         assertThat(userCaptor.getValue().getRoles().iterator().next().getName().equals("USER_MODIFY_OWN"));
-        //check if Roles contain values from above
+
     }
 
     @Test
     @WithMockUser
     public void updateUserById_deliverUserDTOToUpdate_returnUpdatedUserDTO() throws Exception {
+
         Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
@@ -227,11 +232,13 @@ public class UserController {
         assertThat(userCaptor.getValue().getEmail().equals("john.doe@noseryoung.ch"));
         //check if Roles contain values from above
         assertThat(stringCaptor.getValue().equals(uuid.toString()));
+
     }
 
     @Test
     @WithMockUser
     public void deleteUserById_requestADeletionOfUserById_returnAppropriateState() throws Exception {
+
         given(userService.deleteById(anyString())).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
             return null;
@@ -247,6 +254,7 @@ public class UserController {
         ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
         verify(userService, times(1)).deleteById(stringCaptor.capture());
         Assert.assertEquals(uuid.toString(),stringCaptor.getValue());
+
     }
 
 }
