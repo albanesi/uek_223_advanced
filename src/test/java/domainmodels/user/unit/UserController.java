@@ -7,6 +7,7 @@ import ch.course223.advanced.domainmodels.role.RoleDTO;
 import ch.course223.advanced.domainmodels.user.User;
 import ch.course223.advanced.domainmodels.user.UserDTO;
 import ch.course223.advanced.domainmodels.user.UserService;
+import ch.course223.advanced.error.BadRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,20 +67,28 @@ public class UserController {
         User adminUser = new User().setRoles(adminUserRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
 
         //Mocks
-        given(userService.findById(anyString())).willReturn(basicUser);
+        given(userService.findById(anyString())).will(invocation -> {
+            if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
+            return (basicUser);
+        });
 
         given(userService.findAll()).willReturn(Arrays.asList(basicUser, adminUser));
 
         given(userService.save(any(User.class))).will(invocation -> {
+            if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
             UUID uuid = UUID.randomUUID();
             User userDTO = invocation.getArgument(0);
             return userDTO.setId(uuid.toString());
         });
 
         given(userService.updateById(anyString(), any(User.class))).will(invocation -> {
-            if ("non-existent".equals(invocation.getArgument(0))) throw new NoSuchElementException();
-
+            if ("non-existent".equals(invocation.getArgument(0)) || "non-existent".equals(invocation.getArgument(1))) throw new BadRequestException();
             return ((User) invocation.getArgument(1)).setId(invocation.getArgument(0));
+        });
+
+        given(userService.deleteById(anyString())).will(invocation -> {
+            if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
+            return void;
         });
 
     }
