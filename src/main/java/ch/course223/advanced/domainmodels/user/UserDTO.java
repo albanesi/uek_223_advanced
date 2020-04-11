@@ -1,8 +1,8 @@
 package ch.course223.advanced.domainmodels.user;
 
 import ch.course223.advanced.core.ExtendedDTO;
-import ch.course223.advanced.domainmodels.authority.AuthorityDTO;
 import ch.course223.advanced.domainmodels.role.RoleDTO;
+import ch.course223.advanced.validation.notnull.NotNull;
 
 import java.util.Set;
 
@@ -12,6 +12,7 @@ public class UserDTO extends ExtendedDTO {
 
     private String lastName;
 
+    @NotNull
     private String email;
 
     private Set<RoleDTO> roles;

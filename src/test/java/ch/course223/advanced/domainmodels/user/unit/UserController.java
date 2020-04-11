@@ -30,9 +30,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
