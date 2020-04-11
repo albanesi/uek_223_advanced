@@ -44,6 +44,10 @@ dependencies {
 	//JUnit
 	testImplementation('org.junit.jupiter:junit-jupiter:5.5.2')
 
+	//JSONWebtoken
+	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
+
+
 }
 
 test {
