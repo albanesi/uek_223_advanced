@@ -153,7 +153,7 @@ public class UserController {
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
 
         Set<RoleDTO> basicUserRoleDTOS = new HashSet<RoleDTO>();
-        basicUserRoleDTOS.add(new RoleDTO().setName("USER").setAuthorities(basicUserAuthorityDTOS));
+        basicUserRoleDTOS.add(new RoleDTO().setName("BASIC_USER").setAuthorities(basicUserAuthorityDTOS));
 
         UserDTO userDTO = new UserDTO().setRoles(basicUserRoleDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
 
@@ -166,18 +166,20 @@ public class UserController {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("john"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("jane"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("doe"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("john.doe@noseryoung.ch"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].name").value("USER"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("jane.doe@noseryoung.ch"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].name").value("BASIC_USER"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].authorities[0].name").value("USER_MODIFY_OWN"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].authorities[1].name").value("USER_SEE_OWN"));
 
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userService, times(1)).save(any(User.class));
-        assertThat(userCaptor.getValue().getFirstName().equals("john"));
+        verify(userService, times(1)).save(userCaptor.capture());
+        assertThat(userCaptor.getValue().getFirstName().equals("jane"));
         assertThat(userCaptor.getValue().getLastName().equals("doe"));
-        assertThat(userCaptor.getValue().getEmail().equals("john.doe@noseryoung.ch"));
+        assertThat(userCaptor.getValue().getEmail().equals("jane.doe@noseryoung.ch"));
+        assertThat(userCaptor.getValue().getRoles().iterator().next().getName().equals("USER_SEE_OWN"));
+        assertThat(userCaptor.getValue().getRoles().iterator().next().getName().equals("USER_MODIFY_OWN"));
         //check if Roles contain values from above
     }
 
