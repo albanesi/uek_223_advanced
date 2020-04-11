@@ -9,6 +9,7 @@ import ch.course223.advanced.domainmodels.user.UserDTO;
 import ch.course223.advanced.domainmodels.user.UserService;
 import ch.course223.advanced.error.BadRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.ArrayUtils;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,7 +56,7 @@ public class UserController {
     }
 
     @Test
-    @WithMockUser(roles = {"BASIC_USER"})
+    @WithMockUser
     public void findById_requestUserById_returnsUser() throws Exception {
 
         Set<Authority> basicUserAuthorities = new HashSet<Authority>();
@@ -69,12 +70,6 @@ public class UserController {
         basicUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
         adminUserAuthorities.add(new Authority().setName("USER_MODIFY_GLOBAL"));
         adminUserAuthorities.add(new Authority().setName("USER_DELETE"));
-
-       // .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(basicUserAuthorities.stream().map(Authority::getName).toArray(), adminUserAuthorities.stream().map(Authority::getName).toArray())));
-
-        Stream<String> stream1 = basicUserAuthorities.stream().map(Authority::getName);
-        Stream<String> stream2 = adminUserAuthorities.stream().map(Authority::getName);
-        Object[] stream3 = Stream.of(stream1,stream2).toArray();
 
         Set<Role> basicUserRoles = new HashSet<Role>();
         basicUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
@@ -97,7 +92,7 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(basicUser.getLastName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(basicUser.getEmail()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(basicUserRoles.stream().map(Role::getName).toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(stream3)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(adminUserAuthorities.stream().map(Authority::getName).toArray(), basicUserAuthorities.stream().map(Authority::getName).toArray()))));
                 //.andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.contains("BASIC_USER", "BASIC_USER")));
 
         ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
