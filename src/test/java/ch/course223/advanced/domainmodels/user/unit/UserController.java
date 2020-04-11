@@ -211,6 +211,16 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
 
+        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userService, times(1)).updateById(anyString(), any(User.class));
+        assertThat(userCaptor.getValue().getFirstName().equals("john"));
+        assertThat(userCaptor.getValue().getLastName().equals("doe"));
+        assertThat(userCaptor.getValue().getEmail().equals("john.doe@noseryoung.ch"));
+        //check if Roles contain values from above
+        assertThat(stringCaptor.getValue().equals(uuid.toString()));
+
+
 
     }
 
@@ -220,10 +230,13 @@ public class UserController {
         UUID uuid = UUID.randomUUID();
 
         mvc.perform(
-                MockMvcRequestBuilders.put("/users/{id}", uuid.toString())
-                        .contentType(MediaType.APPLICATION_JSON)
+                MockMvcRequestBuilders.delete("/users/{id}", uuid.toString())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+        verify(userService, times(1)).deleteById(anyString());
+        assertThat(stringCaptor.getValue().equals(uuid.toString()));
 
     }
 
