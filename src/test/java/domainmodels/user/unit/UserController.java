@@ -1,9 +1,13 @@
 package domainmodels.user.unit;
 
 import ch.course223.advanced.domainmodels.authority.Authority;
+import ch.course223.advanced.domainmodels.authority.AuthorityDTO;
 import ch.course223.advanced.domainmodels.role.Role;
+import ch.course223.advanced.domainmodels.role.RoleDTO;
 import ch.course223.advanced.domainmodels.user.User;
+import ch.course223.advanced.domainmodels.user.UserDTO;
 import ch.course223.advanced.domainmodels.user.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,62 +44,48 @@ public class UserController {
     public void setUp(){
 
         //Business Objects (used in findById, findAll)
-        Set<Authority> userAuthorities = new HashSet<Authority>();
-        userAuthorities.add(new Authority().setName("USER_SEE_OWN"));
-        userAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
+        Set<Authority> basicUserAuthorities = new HashSet<Authority>();
+        basicUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
+        basicUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
 
-        Set<Authority> adminAuthorities = new HashSet<Authority>();
-        adminAuthorities.add(new Authority().setName("USER_SEE_OWN"));
-        adminAuthorities.add(new Authority().setName("USER_SEE_GLOBAL"));
-        adminAuthorities.add(new Authority().setName("USER_CREATE"));
-        adminAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
-        adminAuthorities.add(new Authority().setName("USER_MODIFY_GLOBAL"));
-        adminAuthorities.add(new Authority().setName("USER_DELETE"));
+        Set<Authority> adminUserAuthorities = new HashSet<Authority>();
+        adminUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
+        adminUserAuthorities.add(new Authority().setName("USER_SEE_GLOBAL"));
+        adminUserAuthorities.add(new Authority().setName("USER_CREATE"));
+        adminUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
+        adminUserAuthorities.add(new Authority().setName("USER_MODIFY_GLOBAL"));
+        adminUserAuthorities.add(new Authority().setName("USER_DELETE"));
 
-        Set<Role> userRoles = new HashSet<Role>();
-        userRoles.add(new Role().setName("USER").setAuthorities(userAuthorities);
+        Set<Role> basicUserRoles = new HashSet<Role>();
+        basicUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities);
 
-        Set<Role> adminRoles = new HashSet<Role>();
-        adminRoles.add(new Role().setName("ADMIN").setAuthorities(adminAuthorities);
+        Set<Role> adminUserRoles = new HashSet<Role>();
+        adminUserRoles.add(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities));
 
-        User user = new User().setRoles(adminRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
-        User admin = new User().setRoles(adminRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
-
-        //Data Transferable Objects (used in create, updateById, deleteById)
-        Set<AuthorityDTO> userAuthoritiesDTO = new HashSet<AuthorityDTO>();
-        userAuthoritiesDTO.add(new AuthorityDTO().setName("USER_SEE_OWN"));
-        userAuthoritiesDTO.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
-
-        Set<AuthorityDTO> adminAuthoritiesDTO = new HashSet<Authority>();
-        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_SEE_OWN"));
-        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_SEE_GLOBAL"));
-        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_CREATE"));
-        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
-        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_MODIFY_GLOBAL"));
-        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_DELETE"));
-
-        Set<RoleDTO> userRolesDTO = new HashSet<RoleDTO>();
-        userRolesDTO.add(new RoleDTO().setName("USER").setAuthorities(userAuthoritiesDTO);
-
-        Set<RoleDTO> adminRolesDTO = new HashSet<RoleDTO>();
-        adminRolesDTO.add(new RoleDTO().setName("ADMIN").setAuthorities(adminAuthoritiesDTO);
-
-        User userDTO = new UserDTO().setRoles(adminRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
-        User adminDTO = new UserDTO().setRoles(adminRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
+        User basicUser = new User().setRoles(basicUserRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+        User adminUser = new User().setRoles(adminUserRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
 
         //Mocks
-        given(userService.findById(anyString())).will(invocation -> {
-            if ("non-existent".equals(invocation.getArgument(0))) throw new NoSuchElementException();
-            return (user);
+        given(userService.findById(anyString())).willReturn(basicUser);
+
+        given(userService.findAll()).willReturn(Arrays.asList(basicUser, adminUser));
+
+        given(userService.save(any(User.class))).will(invocation -> {
+            UUID uuid = UUID.randomUUID();
+            User userDTO = invocation.getArgument(0);
+            return userDTO.setId(uuid.toString());
         });
 
-        given(userService.findAll()).willReturn(Arrays.asList(user, admin));
+        given(userService.updateById(anyString(), any(User.class))).will(invocation -> {
+            if ("non-existent".equals(invocation.getArgument(0))) throw new NoSuchElementException();
 
+            return ((User) invocation.getArgument(1)).setId(invocation.getArgument(0));
+        });
 
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"BASIC_USER"})
     public void findById_requestUserById_returnsUser() throws Exception {
         UUID uuid = UUID.randomUUID();
         mvc.perform(
@@ -115,9 +105,8 @@ public class UserController {
     @Test
     @WithMockUser
     public void findAll_requestAllUsers_returnsAllUsers() throws Exception {
-        UUID uuid = UUID.randomUUID();
         mvc.perform(
-                MockMvcRequestBuilders.get("/users", uuid.toString())
+                MockMvcRequestBuilders.get("/users")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
@@ -138,29 +127,69 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[4].name").value("USER_MODIFY_GLOBAL"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[5].name").value("USER_DELETE"));
 
-        verify(userService, times(1)).findById(uuid.toString());
+        verify(userService, times(1)).findAll();
     }
 
     @Test
     @WithMockUser
-    public void create_requestsUser_returnsCreatedUser() throws Exception {
-        Set<RoleDTO> roles = new HashSet<>();
-        roles.add(new RoleDTO().setName("rolename"));
+    public void create_deliverUserDTOToCreate_thenReturnCreatedUserDTO() throws Exception {
+        Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();
+        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
+        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
 
-        UserDTO userDTO = new UserDTO().setEmail("kevin@in.ch").setFirstName("kevin").setLastName("in")
-                .setCountry(new CountryDTO().setName("Germany")).setCity(new CityDTO().setName("Berlin").setPostalCode("9090")).setAddress("Ichweissned 60")
-                .setBirthDate("11.07.2000").setPhoneNumber("0930201020")
-                .setAvatarSrc("source").setRoles(roles);
-        String userAsJsonString = new ObjectMapper().writeValueAsString(userDTO);
+        Set<RoleDTO> basicUserRoleDTOS = new HashSet<RoleDTO>();
+        basicUserRoleDTOS.add(new RoleDTO().setName("USER").setAuthorities(basicUserAuthorityDTOS);
+
+        UserDTO userDTO = new UserDTO().setRoles(basicUserRoleDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+
+        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTO);
 
         mvc.perform(
-                MockMvcRequestBuilders.post("/users")
+                MockMvcRequestBuilders
+                        .post("/users")
+                        .content(userDTOAsJsonString)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(userAsJsonString)
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("myID"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("john"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("doe"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("john.doe@noseryoung.ch"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].name").value("USER"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
 
         verify(userService, times(1)).save(any(User.class));
+    }
+
+    @Test
+    @WithMockUser
+    public void updateUserById_deliverUserDTOToUpdate_thenReturnUpdatedUserDTO() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();
+        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
+        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
+
+        Set<RoleDTO> basicUserRoleDTOS = new HashSet<RoleDTO>();
+        basicUserRoleDTOS.add(new RoleDTO().setName("USER").setAuthorities(basicUserAuthorityDTOS);
+
+        UserDTO userDTO = new UserDTO().setRoles(basicUserRoleDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+
+        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTO);
+
+        mvc.perform(
+                MockMvcRequestBuilders.put("/users/{id}", uuid.toString())
+                        .content(userDTOAsJsonString)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("john"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("doe"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("john.doe@noseryoung.ch"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].name").value("USER"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
+
+        verify(userService, times(1)).updateById(anyString(), any(User.class));
     }
 
 }

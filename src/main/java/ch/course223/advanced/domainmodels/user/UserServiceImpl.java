@@ -27,7 +27,6 @@ public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserSe
 
     @Override
     public User findByEmail(String email) {
-
         return findOrThrow(((UserRepository)repository).findByEmail(email));
     }
 }
