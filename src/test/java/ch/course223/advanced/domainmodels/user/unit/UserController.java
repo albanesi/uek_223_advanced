@@ -114,7 +114,7 @@ public class UserController {
 
         ArgumentCaptor<String> userCaptor = ArgumentCaptor.forClass(String.class);
         verify(userService, times(1)).findById(anyString());
-        assertThat(userCaptor.getValue().equals(uuid.toString());
+        assertThat(userCaptor.getValue().equals(uuid.toString()));
     }
 
     @Test
@@ -175,9 +175,9 @@ public class UserController {
 
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService, times(1)).save(any(User.class));
-        assertThat(userCaptor.getValue().getFirstName().equals("john");
-        assertThat(userCaptor.getValue().getLastName().equals("doe");
-        assertThat(userCaptor.getValue().getEmail().equals("john.doe@noseryoung.ch");
+        assertThat(userCaptor.getValue().getFirstName().equals("john"));
+        assertThat(userCaptor.getValue().getLastName().equals("doe"));
+        assertThat(userCaptor.getValue().getEmail().equals("john.doe@noseryoung.ch"));
         //check if Roles contain values from above
     }
 
