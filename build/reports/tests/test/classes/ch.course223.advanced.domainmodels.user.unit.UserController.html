@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.304s</div>
+<div class="counter">0.549s</div>
 <p>duration</p>
 </div>
 </td>
@@ -78,8 +78,8 @@
 </tr>
 </thead>
 <tr>
-<td class="success">findById_requestUserById_returnsUser</td>
-<td class="success">0.304s</td>
+<td class="success">create_deliverUserDTOToCreate_returnCreatedUserDTO</td>
+<td class="success">0.549s</td>
 <td class="success">passed</td>
 </tr>
 </table>
@@ -87,14 +87,14 @@
 <div id="tab1" class="tab">
 <h2>Standard output</h2>
 <span class="code">
-<pre>22:00:50.420 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
-22:00:50.424 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
-22:00:50.425 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
-22:00:50.426 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
-22:00:50.439 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@783cf048 testClass = UserController, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@7f38d34d testClass = UserController, locations = '{}', classes = '{class ch.course223.advanced.Main}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{classpath:application-test.properties}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@2a22fea7, [ImportsContextCustomizer@2941cf1 key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@6aeabc35, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@513c9b7e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@ceaad03, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@443b31f1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true]], class annotated with @DirtiesContext [false] with mode [null].
-22:00:50.446 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
-22:00:50.447 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
-22:00:50.514 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=-1}
+<pre>23:53:04.858 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+23:53:04.859 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+23:53:04.860 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+23:53:04.861 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+23:53:04.870 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@6bea9022 testClass = UserController, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@37066a3e testClass = UserController, locations = '{}', classes = '{class ch.course223.advanced.Main}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{classpath:application-test.properties}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5c89c5fb, [ImportsContextCustomizer@752dcfcd key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1e7889df, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@186241d2, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@5922fba6, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@3640564e], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true]], class annotated with @DirtiesContext [false] with mode [null].
+23:53:04.874 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+23:53:04.874 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+23:53:04.937 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=-1}
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -104,26 +104,26 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v2.2.6.RELEASE)
 
-2020-04-11 22:00:51.221  INFO 26114 --- [    Test worker] c.c.a.d.user.unit.UserController         : Starting UserController on aschvin-Surface-Book with PID 26114 (started by aschvin in /home/aschvin/Documents/Yves_uek/uek_223_advanced)
-2020-04-11 22:00:51.226  INFO 26114 --- [    Test worker] c.c.a.d.user.unit.UserController         : No active profile set, falling back to default profiles: default
-2020-04-11 22:00:52.389  INFO 26114 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2020-04-11 22:00:52.551  INFO 26114 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 149ms. Found 4 JPA repository interfaces.
-2020-04-11 22:00:54.716  INFO 26114 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2020-04-11 22:00:55.036  INFO 26114 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.12.Final
-2020-04-11 22:00:55.093  INFO 26114 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
-2020-04-11 22:00:55.260  INFO 26114 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-04-11 22:00:55.537  INFO 26114 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-04-11 22:00:55.565  INFO 26114 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
-2020-04-11 22:00:55.917  WARN 26114 --- [    Test worker] org.hibernate.id.UUIDHexGenerator        : HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
-2020-04-11 22:00:56.564  INFO 26114 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2020-04-11 22:00:56.578  INFO 26114 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2020-04-11 22:00:56.715  WARN 26114 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2020-04-11 22:00:57.134  INFO 26114 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@54ab818c, org.springframework.security.web.context.SecurityContextPersistenceFilter@140f9c75, org.springframework.security.web.header.HeaderWriterFilter@3674760, org.springframework.web.filter.CorsFilter@12118133, org.springframework.security.web.authentication.logout.LogoutFilter@289cc96c, ch.course223.advanced.security.JWTAuthenticationFilter@77917970, ch.course223.advanced.security.JWTAuthorizationFilter@65a81a0a, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3cea60a7, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@5aa3eec0, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6d8750d2, org.springframework.security.web.session.SessionManagementFilter@19671543, org.springframework.security.web.access.ExceptionTranslationFilter@4214a561, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@3f06c80c]
-2020-04-11 22:00:58.260  INFO 26114 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-04-11 22:00:58.793  INFO 26114 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2020-04-11 22:00:58.794  INFO 26114 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2020-04-11 22:00:58.811  INFO 26114 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 17 ms
-2020-04-11 22:00:58.837  INFO 26114 --- [    Test worker] c.c.a.d.user.unit.UserController         : Started UserController in 8.299 seconds (JVM running for 11.02)
+2020-04-11 23:53:05.760  INFO 30658 --- [    Test worker] c.c.a.d.user.unit.UserController         : Starting UserController on aschvin-Surface-Book with PID 30658 (started by aschvin in /home/aschvin/Documents/Yves_uek/uek_223_advanced)
+2020-04-11 23:53:05.779  INFO 30658 --- [    Test worker] c.c.a.d.user.unit.UserController         : No active profile set, falling back to default profiles: default
+2020-04-11 23:53:07.747  INFO 30658 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2020-04-11 23:53:08.000  INFO 30658 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 233ms. Found 4 JPA repository interfaces.
+2020-04-11 23:53:10.572  INFO 30658 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2020-04-11 23:53:10.739  INFO 30658 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.12.Final
+2020-04-11 23:53:10.799  INFO 30658 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2020-04-11 23:53:11.008  INFO 30658 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-04-11 23:53:11.442  INFO 30658 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-04-11 23:53:11.498  INFO 30658 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2020-04-11 23:53:12.102  WARN 30658 --- [    Test worker] org.hibernate.id.UUIDHexGenerator        : HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2020-04-11 23:53:13.066  INFO 30658 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2020-04-11 23:53:13.080  INFO 30658 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2020-04-11 23:53:13.358  WARN 30658 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2020-04-11 23:53:14.137  INFO 30658 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7ebd83fa, org.springframework.security.web.context.SecurityContextPersistenceFilter@5b8cc21b, org.springframework.security.web.header.HeaderWriterFilter@678cc252, org.springframework.web.filter.CorsFilter@47f12f50, org.springframework.security.web.authentication.logout.LogoutFilter@330ddf88, ch.course223.advanced.security.JWTAuthenticationFilter@6604008e, ch.course223.advanced.security.JWTAuthorizationFilter@47c5e70e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5724e772, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7fbc1adc, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@55f50e5f, org.springframework.security.web.session.SessionManagementFilter@16813a5a, org.springframework.security.web.access.ExceptionTranslationFilter@68267475, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@515fcaac]
+2020-04-11 23:53:16.200  INFO 30658 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-04-11 23:53:17.122  INFO 30658 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2020-04-11 23:53:17.123  INFO 30658 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2020-04-11 23:53:17.157  INFO 30658 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 33 ms
+2020-04-11 23:53:17.212  INFO 30658 --- [    Test worker] c.c.a.d.user.unit.UserController         : Started UserController in 12.253 seconds (JVM running for 14.849)
 </pre>
 </span>
 </div>
@@ -135,7 +135,7 @@
 <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
 </label>
 </div>Generated by 
-<a href="http://www.gradle.org">Gradle 6.3</a> at Apr 11, 2020, 10:00:59 PM</p>
+<a href="http://www.gradle.org">Gradle 6.3</a> at Apr 11, 2020, 11:53:18 PM</p>
 </div>
 </div>
 </body>
