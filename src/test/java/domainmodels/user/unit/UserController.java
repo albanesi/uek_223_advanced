@@ -71,7 +71,7 @@ public class UserController {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"USER"})
     public void findById_requestUserById_returnsUser() throws Exception {
         UUID uuid = UUID.randomUUID();
         mvc.perform(
