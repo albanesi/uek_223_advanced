@@ -1,4 +1,7 @@
 package ch.course223.advanced.domainmodels.user;
 
-public interface UserService {
+import ch.course223.advanced.core.ExtendedService;
+import org.springframework.security.core.userdetails.UserDetailsService;
+
+public interface UserService extends UserDetailsService, ExtendedService<User> {
 }

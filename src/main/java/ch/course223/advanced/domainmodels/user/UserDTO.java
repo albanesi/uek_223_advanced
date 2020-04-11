@@ -1,6 +1,8 @@
 package ch.course223.advanced.domainmodels.user;
 
-public class UserDTO {
+import ch.course223.advanced.core.ExtendedDTO;
+
+public class UserDTO extends ExtendedDTO {
 
     private String firstName;
 
