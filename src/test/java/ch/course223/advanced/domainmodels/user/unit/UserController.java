@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.*;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -110,7 +112,9 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
 
-        verify(userService, times(1)).findById(uuid.toString());
+        ArgumentCaptor<String> userCaptor = ArgumentCaptor.forClass(String.class);
+        verify(userService, times(1)).findById(anyString());
+        assertThat(userCaptor.getValue().equals(uuid.toString());
     }
 
     @Test
@@ -143,7 +147,7 @@ public class UserController {
 
     @Test
     @WithMockUser
-    public void create_deliverUserDTOToCreate_thenReturnCreatedUserDTO() throws Exception {
+    public void create_deliverUserDTOToCreate_returnCreatedUserDTO() throws Exception {
         Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
@@ -169,12 +173,17 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
 
+        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService, times(1)).save(any(User.class));
+        assertThat(userCaptor.getValue().getFirstName().equals("john");
+        assertThat(userCaptor.getValue().getLastName().equals("doe");
+        assertThat(userCaptor.getValue().getEmail().equals("john.doe@noseryoung.ch");
+        //check if Roles contain values from above
     }
 
     @Test
     @WithMockUser
-    public void updateUserById_deliverUserDTOToUpdate_thenReturnUpdatedUserDTO() throws Exception {
+    public void updateUserById_deliverUserDTOToUpdate_returnUpdatedUserDTO() throws Exception {
         UUID uuid = UUID.randomUUID();
         Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
@@ -200,7 +209,20 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
 
-        verify(userService, times(1)).updateById(anyString(), any(User.class));
+
+    }
+
+    @Test
+    @WithMockUser
+    public void deleteUserById_requestADeletionOfUserById_returnAppropriateState() throws Exception {
+        UUID uuid = UUID.randomUUID();
+
+        mvc.perform(
+                MockMvcRequestBuilders.put("/users/{id}", uuid.toString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+
     }
 
 }
