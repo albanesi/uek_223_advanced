@@ -23,14 +23,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserDTO> getById(@PathVariable String id) {
+    public ResponseEntity<UserDTO> findById(@PathVariable String id) {
         User user = userService.findById(id);
         return new ResponseEntity<>(userMapper.toDTO(user), HttpStatus.OK);
     }
 
     @GetMapping({"", "/"})
     public @ResponseBody
-    ResponseEntity<List<UserDTO>> getAll() {
+    ResponseEntity<List<UserDTO>> findAll() {
         List<User> users = userService.findAll();
         return new ResponseEntity<>(userMapper.toDTOs(users), HttpStatus.OK);
     }
