@@ -28,10 +28,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -135,8 +133,8 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].firstName").value(Matchers.containsInAnyOrder(basicUser.getFirstName(),adminUser.getFirstName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].lastName").value(Matchers.containsInAnyOrder(basicUser.getLastName(),adminUser.getLastName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].email").value(Matchers.containsInAnyOrder(basicUser.getEmail(),adminUser.getEmail())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(basicUserRoles.stream().map(Role::getName).toArray(), adminUserRoles.stream().map(Role::getName).toArray()))))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(adminUserAuthorities.stream().map(Authority::getName).toArray(), basicUserAuthorities.stream().map(Authority::getName).toArray()))));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].roles[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(basicUserRoles.stream().map(Role::getName).toArray(), adminUserRoles.stream().map(Role::getName).toArray()))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(adminUserAuthorities.stream().map(Authority::getName).toArray(), basicUserAuthorities.stream().map(Authority::getName).toArray()))));
 
         verify(userService, times(1)).findAll();
 
@@ -240,14 +238,23 @@ public class UserController {
     @WithMockUser
     public void updateUserById_requestUserDTOToBeUpdated_returnUpdatedUserDTO() throws Exception {
 
-        Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();
+        Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<>();
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
 
-        Set<RoleDTO> basicUserRoleDTOS = new HashSet<RoleDTO>();
-        basicUserRoleDTOS.add(new RoleDTO().setName("USER").setAuthorities(basicUserAuthorityDTOS));
+        Set<AuthorityDTO> adminUserAuthoritiesDTOS = new HashSet<>();
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_GLOBAL"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_CREATE"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_GLOBAL"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_DELETE"));
 
-        UserDTO userDTO = new UserDTO().setRoles(basicUserRoleDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+        Set<RoleDTO> userRoleDTOS = new HashSet<RoleDTO>();
+        userRoleDTOS.add(new RoleDTO().setName("BASIC_USER").setAuthorities(basicUserAuthorityDTOS));
+        userRoleDTOS.add(new RoleDTO().setName("ADMIN_USER").setAuthorities(adminUserAuthoritiesDTOS));
+
+        UserDTO userDTO = new UserDTO().setRoles(userRoleDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
 
         String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTO);
 
@@ -264,39 +271,38 @@ public class UserController {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("john"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("doe"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("john.doe@noseryoung.ch"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].name").value("USER"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userDTO.getFirstName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userDTO.getLastName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userDTO.getEmail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(userRoleDTOS.stream().map(RoleDTO::getName).toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(basicUserAuthorityDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray()))));
 
         ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService, times(1)).updateById(stringCaptor.capture(), userCaptor.capture());
-        assertThat(userCaptor.getValue().getFirstName().equals("john"));
-        assertThat(userCaptor.getValue().getLastName().equals("doe"));
-        assertThat(userCaptor.getValue().getEmail().equals("john.doe@noseryoung.ch"));
-        //check if Roles contain values from above
-        assertThat(stringCaptor.getValue().equals(uuid.toString()));
-
+        Assert.assertEquals(uuid.toString(), stringCaptor.getValue());
+        Assert.assertEquals(userDTO.getFirstName(), userCaptor.getValue().getFirstName());
+        Assert.assertEquals(userDTO.getLastName(), userCaptor.getValue().getLastName());
+        Assert.assertEquals(userDTO.getEmail(), userCaptor.getValue().getEmail());
+        Assert.assertThat(userRoleDTOS.stream().map(RoleDTO::getName).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getName).toArray()));
+        Assert.assertThat(Arrays.stream(ArrayUtils.addAll(basicUserAuthorityDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray())).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()));
     }
 
-    @Test
+    /*@Test
     @WithMockUser
     public void updateUserById_requestUserDTOWithFalseEmail_returnBadRequest() throws Exception {
 
         mvc.perform(
                 MockMvcRequestBuilders
                         .post("/users")
-                        .content(userDTOAsJsonString)
+                        .content("")
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
         verify(userService, never()).updateById(anyString(), any(User.class));
 
-    }
+    }*/
 
 
     @Test

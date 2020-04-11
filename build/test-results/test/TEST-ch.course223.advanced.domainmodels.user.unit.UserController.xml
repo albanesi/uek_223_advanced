@@ -1,15 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="ch.course223.advanced.domainmodels.user.unit.UserController" tests="1" skipped="0" failures="0" errors="0" timestamp="2020-04-11T21:53:17" hostname="aschvin-Surface-Book" time="0.549">
+<testsuite name="ch.course223.advanced.domainmodels.user.unit.UserController" tests="6" skipped="0" failures="1" errors="0" timestamp="2020-04-11T22:15:31" hostname="aschvin-Surface-Book" time="1.006">
   <properties/>
-  <testcase name="create_deliverUserDTOToCreate_returnCreatedUserDTO" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.549"/>
-  <system-out><![CDATA[23:53:04.858 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
-23:53:04.859 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
-23:53:04.860 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
-23:53:04.861 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
-23:53:04.870 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@6bea9022 testClass = UserController, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@37066a3e testClass = UserController, locations = '{}', classes = '{class ch.course223.advanced.Main}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{classpath:application-test.properties}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@5c89c5fb, [ImportsContextCustomizer@752dcfcd key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@1e7889df, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@186241d2, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@5922fba6, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@3640564e], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true]], class annotated with @DirtiesContext [false] with mode [null].
-23:53:04.874 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
-23:53:04.874 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
-23:53:04.937 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=-1}
+  <testcase name="findAll_requestAllUsers_returnsAllUsers" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.674"/>
+  <testcase name="updateUserById_requestUserDTOToBeUpdated_returnUpdatedUserDTO" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.137"/>
+  <testcase name="create_requestUserDTOWithMissingEmailToBeCreated_returnBadRequest" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.063">
+    <failure message="java.lang.AssertionError: Status expected:&lt;400&gt; but was:&lt;201&gt;" type="java.lang.AssertionError">java.lang.AssertionError: Status expected:&lt;400&gt; but was:&lt;201&gt;
+	at org.springframework.test.util.AssertionErrors.fail(AssertionErrors.java:59)
+	at org.springframework.test.util.AssertionErrors.assertEquals(AssertionErrors.java:122)
+	at org.springframework.test.web.servlet.result.StatusResultMatchers.lambda$matcher$9(StatusResultMatchers.java:627)
+	at org.springframework.test.web.servlet.MockMvc$1.andExpect(MockMvc.java:196)
+	at ch.course223.advanced.domainmodels.user.unit.UserController.create_requestUserDTOWithMissingEmailToBeCreated_returnBadRequest(UserController.java:232)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestExecutionCallbacks.evaluate(RunBeforeTestExecutionCallbacks.java:74)
+	at org.springframework.test.context.junit4.statements.RunAfterTestExecutionCallbacks.evaluate(RunAfterTestExecutionCallbacks.java:84)
+	at org.junit.internal.runners.statements.RunBefores.evaluate(RunBefores.java:26)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestMethodCallbacks.evaluate(RunBeforeTestMethodCallbacks.java:75)
+	at org.springframework.test.context.junit4.statements.RunAfterTestMethodCallbacks.evaluate(RunAfterTestMethodCallbacks.java:86)
+	at org.springframework.test.context.junit4.statements.SpringRepeat.evaluate(SpringRepeat.java:84)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:325)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:251)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97)
+	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:137)
+	at org.junit.runner.JUnitCore.run(JUnitCore.java:115)
+	at org.junit.vintage.engine.execution.RunnerExecutor.execute(RunnerExecutor.java:40)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:195)
+	at java.base/java.util.Iterator.forEachRemaining(Iterator.java:133)
+	at java.base/java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1801)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:484)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
+	at org.junit.vintage.engine.VintageTestEngine.executeAllChildren(VintageTestEngine.java:80)
+	at org.junit.vintage.engine.VintageTestEngine.execute(VintageTestEngine.java:71)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:220)
+	at org.junit.platform.launcher.core.DefaultLauncher.lambda$execute$6(DefaultLauncher.java:188)
+	at org.junit.platform.launcher.core.DefaultLauncher.withInterceptedStreams(DefaultLauncher.java:202)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:181)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:128)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.processAllTestClasses(JUnitPlatformTestClassProcessor.java:99)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor$CollectAllTestClassesExecutor.access$000(JUnitPlatformTestClassProcessor.java:79)
+	at org.gradle.api.internal.tasks.testing.junitplatform.JUnitPlatformTestClassProcessor.stop(JUnitPlatformTestClassProcessor.java:75)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.stop(SuiteTestClassProcessor.java:61)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at com.sun.proxy.$Proxy2.stop(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.stop(TestWorker.java:132)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:567)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:182)
+	at org.gradle.internal.remote.internal.hub.MessageHubBackedObjectConnection$DispatchWrapper.dispatch(MessageHubBackedObjectConnection.java:164)
+	at org.gradle.internal.remote.internal.hub.MessageHub$Handler.run(MessageHub.java:412)
+	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+	at org.gradle.internal.concurrent.ManagedExecutorImpl$1.run(ManagedExecutorImpl.java:48)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1128)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:628)
+	at org.gradle.internal.concurrent.ThreadFactoryImpl$ManagedThreadRunnable.run(ThreadFactoryImpl.java:56)
+	at java.base/java.lang.Thread.run(Thread.java:830)
+</failure>
+  </testcase>
+  <testcase name="deleteUserById_requestADeletionOfUserById_returnAppropriateState" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.033"/>
+  <testcase name="findById_requestUserById_returnsUser" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.031"/>
+  <testcase name="create_deliverUserDTOToCreate_returnCreatedUserDTO" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.056"/>
+  <system-out><![CDATA[00:15:15.394 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+00:15:15.395 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+00:15:15.398 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+00:15:15.398 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+00:15:15.406 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@4938eaae testClass = UserController, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@29edce0e testClass = UserController, locations = '{}', classes = '{class ch.course223.advanced.Main}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{classpath:application-test.properties}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@3d3d6a4d, [ImportsContextCustomizer@57c9e90b key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@40e7f2d7, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@66c9ddd6, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@e432f0b6, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@347f463a], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true]], class annotated with @DirtiesContext [false] with mode [null].
+00:15:15.410 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+00:15:15.411 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+00:15:15.473 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=-1}
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -19,26 +107,63 @@
  =========|_|==============|___/=/_/_/_/
  :: Spring Boot ::        (v2.2.6.RELEASE)
 
-2020-04-11 23:53:05.760  INFO 30658 --- [    Test worker] c.c.a.d.user.unit.UserController         : Starting UserController on aschvin-Surface-Book with PID 30658 (started by aschvin in /home/aschvin/Documents/Yves_uek/uek_223_advanced)
-2020-04-11 23:53:05.779  INFO 30658 --- [    Test worker] c.c.a.d.user.unit.UserController         : No active profile set, falling back to default profiles: default
-2020-04-11 23:53:07.747  INFO 30658 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2020-04-11 23:53:08.000  INFO 30658 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 233ms. Found 4 JPA repository interfaces.
-2020-04-11 23:53:10.572  INFO 30658 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2020-04-11 23:53:10.739  INFO 30658 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.12.Final
-2020-04-11 23:53:10.799  INFO 30658 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
-2020-04-11 23:53:11.008  INFO 30658 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2020-04-11 23:53:11.442  INFO 30658 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2020-04-11 23:53:11.498  INFO 30658 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
-2020-04-11 23:53:12.102  WARN 30658 --- [    Test worker] org.hibernate.id.UUIDHexGenerator        : HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
-2020-04-11 23:53:13.066  INFO 30658 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
-2020-04-11 23:53:13.080  INFO 30658 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2020-04-11 23:53:13.358  WARN 30658 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2020-04-11 23:53:14.137  INFO 30658 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@7ebd83fa, org.springframework.security.web.context.SecurityContextPersistenceFilter@5b8cc21b, org.springframework.security.web.header.HeaderWriterFilter@678cc252, org.springframework.web.filter.CorsFilter@47f12f50, org.springframework.security.web.authentication.logout.LogoutFilter@330ddf88, ch.course223.advanced.security.JWTAuthenticationFilter@6604008e, ch.course223.advanced.security.JWTAuthorizationFilter@47c5e70e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5724e772, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7fbc1adc, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@55f50e5f, org.springframework.security.web.session.SessionManagementFilter@16813a5a, org.springframework.security.web.access.ExceptionTranslationFilter@68267475, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@515fcaac]
-2020-04-11 23:53:16.200  INFO 30658 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
-2020-04-11 23:53:17.122  INFO 30658 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
-2020-04-11 23:53:17.123  INFO 30658 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
-2020-04-11 23:53:17.157  INFO 30658 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 33 ms
-2020-04-11 23:53:17.212  INFO 30658 --- [    Test worker] c.c.a.d.user.unit.UserController         : Started UserController in 12.253 seconds (JVM running for 14.849)
+2020-04-12 00:15:16.580  INFO 849 --- [    Test worker] c.c.a.d.user.unit.UserController         : Starting UserController on aschvin-Surface-Book with PID 849 (started by aschvin in /home/aschvin/Documents/Yves_uek/uek_223_advanced)
+2020-04-12 00:15:16.595  INFO 849 --- [    Test worker] c.c.a.d.user.unit.UserController         : No active profile set, falling back to default profiles: default
+2020-04-12 00:15:18.264  INFO 849 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2020-04-12 00:15:18.652  INFO 849 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 359ms. Found 4 JPA repository interfaces.
+2020-04-12 00:15:22.951  INFO 849 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2020-04-12 00:15:23.384  INFO 849 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.12.Final
+2020-04-12 00:15:23.476  INFO 849 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+2020-04-12 00:15:23.767  INFO 849 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2020-04-12 00:15:24.465  INFO 849 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2020-04-12 00:15:24.570  INFO 849 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+2020-04-12 00:15:25.530  WARN 849 --- [    Test worker] org.hibernate.id.UUIDHexGenerator        : HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+2020-04-12 00:15:26.657  INFO 849 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2020-04-12 00:15:26.673  INFO 849 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2020-04-12 00:15:26.963  WARN 849 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2020-04-12 00:15:27.758  INFO 849 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@3f82a1de, org.springframework.security.web.context.SecurityContextPersistenceFilter@118d488f, org.springframework.security.web.header.HeaderWriterFilter@1de4dbc5, org.springframework.web.filter.CorsFilter@2f2fd8a6, org.springframework.security.web.authentication.logout.LogoutFilter@6242f9f4, ch.course223.advanced.security.JWTAuthenticationFilter@39ba9900, ch.course223.advanced.security.JWTAuthorizationFilter@38946b3e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@df61265, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@468cf728, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@12b2a1a3, org.springframework.security.web.session.SessionManagementFilter@1ac337d7, org.springframework.security.web.access.ExceptionTranslationFilter@15c13034, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7f5ea958]
+2020-04-12 00:15:30.003  INFO 849 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2020-04-12 00:15:31.124  INFO 849 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+2020-04-12 00:15:31.125  INFO 849 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+2020-04-12 00:15:31.167  INFO 849 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 40 ms
+2020-04-12 00:15:31.230  INFO 849 --- [    Test worker] c.c.a.d.user.unit.UserController         : Started UserController in 15.728 seconds (JVM running for 19.644)
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /users
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Accept:"application/json", Content-Length:"451"]
+             Body = {"id":null,"firstName":"jane","lastName":"doe","email":null,"roles":[{"id":null,"name":"BASIC_USER","authorities":[{"id":null,"name":"USER_SEE_OWN"},{"id":null,"name":"USER_MODIFY_OWN"}]},{"id":null,"name":"ADMIN_USER","authorities":[{"id":null,"name":"USER_SEE_GLOBAL"},{"id":null,"name":"USER_CREATE"},{"id":null,"name":"USER_SEE_OWN"},{"id":null,"name":"USER_MODIFY_GLOBAL"},{"id":null,"name":"USER_MODIFY_OWN"},{"id":null,"name":"USER_DELETE"}]}]}
+    Session Attrs = {}
+
+Handler:
+             Type = ch.course223.advanced.domainmodels.user.UserController
+           Method = ch.course223.advanced.domainmodels.user.UserController#create(UserDTO)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 201
+    Error message = null
+          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"1; mode=block", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"id":"e42c58ba-2b53-410c-8017-0cffc3e52aee","firstName":"jane","lastName":"doe","email":null,"roles":[{"id":null,"name":"BASIC_USER","authorities":[{"id":null,"name":"USER_SEE_OWN"},{"id":null,"name":"USER_MODIFY_OWN"}]},{"id":null,"name":"ADMIN_USER","authorities":[{"id":null,"name":"USER_SEE_OWN"},{"id":null,"name":"USER_MODIFY_OWN"},{"id":null,"name":"USER_CREATE"},{"id":null,"name":"USER_SEE_GLOBAL"},{"id":null,"name":"USER_DELETE"},{"id":null,"name":"USER_MODIFY_GLOBAL"}]}]}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

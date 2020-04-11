@@ -2,13 +2,10 @@ package ch.course223.advanced.domainmodels.user;
 
 import ch.course223.advanced.core.ExtendedEntity;
 import ch.course223.advanced.domainmodels.role.Role;
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
-import org.hibernate.annotations.GenericGenerator;
+import ch.course223.advanced.validation.notnull.NotNull;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Set;
 
