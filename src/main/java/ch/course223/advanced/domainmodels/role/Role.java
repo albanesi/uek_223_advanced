@@ -16,12 +16,12 @@ public class Role extends ExtendedEntity {
   private String name;
 
   @ManyToMany(fetch = FetchType.EAGER)
+  @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinTable(
           name = "role_authority",
           joinColumns = @JoinColumn(name = "role_id"),
           inverseJoinColumns = @JoinColumn(name = "authority_id")
   )
-  @OnDelete(action = OnDeleteAction.CASCADE)
   private Set<Authority> authorities;
 
   public Role() {

@@ -1,7 +1,7 @@
 package ch.course223.advanced.domainmodels.authority.mapper;
 
 import ch.course223.advanced.domainmodels.authority.Authority;
-import ch.course223.advanced.domainmodels.authority.AuthorityDTO;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

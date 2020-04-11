@@ -1,9 +1,8 @@
 package ch.course223.advanced.domainmodels.role.mapper;
 
 import ch.course223.advanced.domainmodels.authority.Authority;
-import ch.course223.advanced.domainmodels.authority.AuthorityDTO;
 import ch.course223.advanced.domainmodels.role.Role;
-import ch.course223.advanced.domainmodels.role.RoleDTO;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

@@ -11,12 +11,4 @@ import java.util.Optional;
 @Repository
 public interface AuthorityRepository extends ExtendedJpaRepository<Authority> {
 
-	Optional<Authority> findByName(String name);
-
-	void deleteByName(String name);
-
-	@Modifying
-	@Transactional
-	@Query(nativeQuery = true, value = "delete from role_authority where authority_id = ?")
-	void deleteRelationsToRolesById(String id);
 }
