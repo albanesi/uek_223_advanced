@@ -83,9 +83,40 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("john.doe@noseryoung.ch"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].name").value("USER"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_MODIFY_OWN"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
 
         verify(userService, times(1)).findById(uuid.toString());
     }
+
+    @Test
+    @WithMockUser
+    public void findAll_requestAllUsers_returnsAllUsers() throws Exception {
+        UUID uuid = UUID.randomUUID();
+        mvc.perform(
+                MockMvcRequestBuilders.get("/users", uuid.toString())
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value("john.doe@noseryoung.ch"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].email").value("jane.doe@noseryoung.ch"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("john"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].firstName").value("jane"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName").value("doe"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].lastName").value("doe"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].roles[0].name").value("ADMIN"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].name").value("USER"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].roles[0].[0].name").value("USER_SEE_OWN"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[0].roles[0].[1].name").value("USER_MODIFY_OWN"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[0].name").value("USER_SEE_OWN"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[1].name").value("USER_MODIFY_OWN"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[2].name").value("USER_CREATE"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[3].name").value("USER_MODIFY_OWN"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[4].name").value("USER_MODIFY_GLOBAL"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[5].name").value("USER_DELETE"));
+
+        verify(userService, times(1)).findById(uuid.toString());
+    }
+
+
 
 }
