@@ -55,10 +55,10 @@ public class UserController {
         userAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
 
         Set<Role> adminRoles = new HashSet<Role>();
-        adminRoles.add(new Role().setName("ADMIN").setAuthorities(adminAuthorities);
+        adminRoles.add(new Role().setName("ADMIN").setAuthorities(adminAuthorities));
 
         Set<Role> userRoles = new HashSet<Role>();
-        adminRoles.add(new Role().setName("USER").setAuthorities(userAuthorities);
+        adminRoles.add(new Role().setName("USER").setAuthorities(userAuthorities));
 
         User admin = new User().setRoles(adminRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
         User user = new User().setRoles(adminRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
