@@ -11,6 +11,7 @@ import ch.course223.advanced.error.BadRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,6 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
@@ -71,15 +71,15 @@ public class UserController {
         adminUserAuthorities.add(new Authority().setName("USER_MODIFY_GLOBAL"));
         adminUserAuthorities.add(new Authority().setName("USER_DELETE"));
 
-        Set<Role> basicUserRoles = new HashSet<Role>();
-        basicUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
-        basicUserRoles.add(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities));
+        Set<Role> userRoles = new HashSet<Role>();
+        userRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
+        userRoles.add(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities));
 
-        User basicUser = new User().setRoles(basicUserRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+        User adminUser = new User().setRoles(userRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
 
         given(userService.findById(anyString())).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
-            return (basicUser);
+            return (adminUser);
         });
 
         UUID uuid = UUID.randomUUID();
@@ -88,12 +88,11 @@ public class UserController {
                 MockMvcRequestBuilders.get("/users/{id}", uuid.toString())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(basicUser.getFirstName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(basicUser.getLastName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(basicUser.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(basicUserRoles.stream().map(Role::getName).toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(adminUser.getFirstName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(adminUser.getLastName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(adminUser.getEmail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(userRoles.stream().map(Role::getName).toArray())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(adminUserAuthorities.stream().map(Authority::getName).toArray(), basicUserAuthorities.stream().map(Authority::getName).toArray()))));
-                //.andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.contains("BASIC_USER", "BASIC_USER")));
 
         ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
         verify(userService, times(1)).findById(stringCaptor.capture());
@@ -121,8 +120,8 @@ public class UserController {
         Set<Role> adminUserRoles = new HashSet<Role>();
         adminUserRoles.add(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities));
 
-        User adminUser = new User().setRoles(adminUserRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
         User basicUser = new User().setRoles(basicUserRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+        User adminUser = new User().setRoles(adminUserRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
 
         given(userService.findAll()).willReturn(Arrays.asList(adminUser, basicUser));
 
@@ -131,22 +130,11 @@ public class UserController {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].email").value("john.doe@noseryoung.ch"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].email").value("jane.doe@noseryoung.ch"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].firstName").value("john"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].firstName").value("jane"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName").value("doe"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].lastName").value("doe"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].roles[0].name").value("ADMIN_USER"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].name").value("BASIC_USER"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].roles[0].[0].name").value("USER_SEE_OWN"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].roles[0].[1].name").value("USER_MODIFY_OWN"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[0].name").value("USER_SEE_OWN"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[1].name").value("USER_MODIFY_OWN"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[2].name").value("USER_CREATE"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[3].name").value("USER_MODIFY_OWN"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[4].name").value("USER_MODIFY_GLOBAL"))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[5].name").value("USER_DELETE"));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].firstName").value(Matchers.containsInAnyOrder(basicUser.getFirstName(),adminUser.getFirstName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].lastName").value(Matchers.containsInAnyOrder(basicUser.getLastName(),adminUser.getLastName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].email").value(Matchers.containsInAnyOrder(basicUser.getEmail(),adminUser.getEmail())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(basicUserRoles.stream().map(Role::getName).toArray(), adminUserRoles.stream().map(Role::getName).toArray()))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(adminUserAuthorities.stream().map(Authority::getName).toArray(), basicUserAuthorities.stream().map(Authority::getName).toArray()))));
 
         verify(userService, times(1)).findAll();
     }
@@ -200,12 +188,6 @@ public class UserController {
     @Test
     @WithMockUser
     public void updateUserById_deliverUserDTOToUpdate_returnUpdatedUserDTO() throws Exception {
-        given(userService.updateById(anyString(), any(User.class))).will(invocation -> {
-            if ("non-existent".equals(invocation.getArgument(0)) || "non-existent".equals(invocation.getArgument(1))) throw new BadRequestException();
-            return ((User) invocation.getArgument(1)).setId(invocation.getArgument(0));
-        });
-
-        UUID uuid = UUID.randomUUID();
         Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
@@ -216,6 +198,13 @@ public class UserController {
         UserDTO userDTO = new UserDTO().setRoles(basicUserRoleDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
 
         String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTO);
+
+        given(userService.updateById(anyString(), any(User.class))).will(invocation -> {
+            if ("non-existent".equals(invocation.getArgument(0)) || "non-existent".equals(invocation.getArgument(1))) throw new BadRequestException();
+            return ((User) invocation.getArgument(1)).setId(invocation.getArgument(0));
+        });
+
+        UUID uuid = UUID.randomUUID();
 
         mvc.perform(
                 MockMvcRequestBuilders.put("/users/{id}", uuid.toString())
@@ -238,13 +227,11 @@ public class UserController {
         assertThat(userCaptor.getValue().getEmail().equals("john.doe@noseryoung.ch"));
         //check if Roles contain values from above
         assertThat(stringCaptor.getValue().equals(uuid.toString()));
-
     }
 
     @Test
     @WithMockUser
     public void deleteUserById_requestADeletionOfUserById_returnAppropriateState() throws Exception {
-
         given(userService.deleteById(anyString())).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
             return null;
@@ -259,8 +246,7 @@ public class UserController {
 
         ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
         verify(userService, times(1)).deleteById(stringCaptor.capture());
-        assertThat(stringCaptor.getValue().equals(uuid.toString()));
-
+        Assert.assertEquals(uuid.toString(),stringCaptor.getValue());
     }
 
 }
