@@ -112,9 +112,9 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
 
-        ArgumentCaptor<String> userCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
         verify(userService, times(1)).findById(anyString());
-        assertThat(userCaptor.getValue().equals(uuid.toString()));
+        assertThat(stringCaptor.getValue().equals(uuid.toString()));
     }
 
     @Test
@@ -217,8 +217,6 @@ public class UserController {
         assertThat(userCaptor.getValue().getEmail().equals("john.doe@noseryoung.ch"));
         //check if Roles contain values from above
         assertThat(stringCaptor.getValue().equals(uuid.toString()));
-
-
 
     }
 
