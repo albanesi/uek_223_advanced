@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ArrayUtils;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,70 +49,29 @@ public class UserController {
     @MockBean
     private UserService userService;
 
-    private Set<Authority> basicUserAuthorities;
-    private Set<Authority> adminUserAuthorities;
-    private Set<AuthorityDTO> basicUserAuthoritiesDTOS;
-    private Set<AuthorityDTO> adminUserAuthoritiesDTOS;
+    private static Set<Authority> basicUserAuthorities;
+    private static Set<Authority> adminUserAuthorities;
+    private static Set<AuthorityDTO> basicUserAuthoritiesDTOS;
+    private static Set<AuthorityDTO> adminUserAuthoritiesDTOS;
 
-    private Set<Role> basicUserRoles;
-    private Set<Role> adminUserRoles;
-    private Set<Role> mixedUserRoles;
-    private Set<RoleDTO> mixedUserRolesDTOS;
+    private static Set<Role> basicUserRoles;
+    private static Set<Role> adminUserRoles;
+    private static Set<Role> mixedUserRoles;
+    private static Set<RoleDTO> mixedUserRolesDTOS;
 
-    @Before
-    public void setUp(){
+    @BeforeClass
+    public static void setUp(){
 
-        Stream<Authority> basicUserAuthorityStream = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_MODIFY_OWN"));
-        Stream<Authority> adminUserAuthorityStream = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_SEE_GLOBAL"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY_OWN"), new Authority().setName("USER_MODIFY_GLOBAL"), new Authority().setName("USER_DELETE"));
-        Stream<AuthorityDTO> basicUserAuthoritiesDTOSStream = Stream.of(new AuthorityDTO().setName("USER_SEE_OWN"), new AuthorityDTO().setName("USER_MODIFY_OWN"));
-        Stream<AuthorityDTO> adminUserAuthoritiesDTOSStream = Stream.of(new AuthorityDTO().setName("USER_SEE_OWN"), new AuthorityDTO().setName("USER_SEE_GLOBAL"), new AuthorityDTO().setName("USER_CREATE"), new AuthorityDTO().setName("USER_MODIFY_OWN"), new AuthorityDTO().setName("USER_MODIFY_GLOBAL"), new AuthorityDTO().setName("USER_DELETE"));
+        basicUserAuthorities = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_MODIFY_OWN")).collect(Collectors.toSet());
+        adminUserAuthorities = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_SEE_GLOBAL"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY_OWN"), new Authority().setName("USER_MODIFY_GLOBAL"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
+        basicUserAuthoritiesDTOS = Stream.of(new AuthorityDTO().setName("USER_SEE_OWN"), new AuthorityDTO().setName("USER_MODIFY_OWN")).collect(Collectors.toSet());
+        adminUserAuthoritiesDTOS = Stream.of(new AuthorityDTO().setName("USER_SEE_OWN"), new AuthorityDTO().setName("USER_SEE_GLOBAL"), new AuthorityDTO().setName("USER_CREATE"), new AuthorityDTO().setName("USER_MODIFY_OWN"), new AuthorityDTO().setName("USER_MODIFY_GLOBAL"), new AuthorityDTO().setName("USER_DELETE")).collect(Collectors.toSet());
 
-        basicUserAuthorities = basicUserAuthorityStream.collect(Collectors.toSet());
+        basicUserRoles = Stream.of(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities)).collect(Collectors.toSet());
+        adminUserRoles = Stream.of(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities)).collect(Collectors.toSet());
+        mixedUserRoles = Stream.of(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities), new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities)).collect(Collectors.toSet());
+        mixedUserRolesDTOS = Stream.of(new RoleDTO().setName("BASIC_USER").setAuthorities(basicUserAuthoritiesDTOS), new RoleDTO().setName("ADMIN_USER").setAuthorities(adminUserAuthoritiesDTOS)).collect(Collectors.toSet());
 
-        adminUserAuthorities = adminUserAuthorityStream.collect(Collectors.toSet());
-
-        /*basicUserAuthorities = new HashSet<Authority>();
-        basicUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
-        basicUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
-
-        adminUserAuthorities = new HashSet<Authority>();
-        adminUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
-        adminUserAuthorities.add(new Authority().setName("USER_SEE_GLOBAL"));
-        adminUserAuthorities.add(new Authority().setName("USER_CREATE"));
-        adminUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
-        adminUserAuthorities.add(new Authority().setName("USER_MODIFY_GLOBAL"));
-        adminUserAuthorities.add(new Authority().setName("USER_DELETE"));*/
-
-        basicUserAuthoritiesDTOS = basicUserAuthoritiesDTOSStream.collect(Collectors.toSet());
-
-        adminUserAuthoritiesDTOS = adminUserAuthoritiesDTOSStream.collect(Collectors.toSet());
-
-        /*basicUserAuthoritiesDTOS = new HashSet<>();
-        basicUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
-        basicUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
-
-        adminUserAuthoritiesDTOS = new HashSet<>();
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_GLOBAL"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_CREATE"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_GLOBAL"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_DELETE"));*/
-
-
-        basicUserRoles = new HashSet<Role>();
-        basicUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
-
-        adminUserRoles = new HashSet<Role>();
-        adminUserRoles.add(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities));
-
-        mixedUserRoles = new HashSet<Role>();
-        mixedUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
-        mixedUserRoles.add(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities));
-
-        mixedUserRolesDTOS = new HashSet<RoleDTO>();
-        mixedUserRolesDTOS.add(new RoleDTO().setName("BASIC_USER").setAuthorities(basicUserAuthoritiesDTOS));
-        mixedUserRolesDTOS.add(new RoleDTO().setName("ADMIN_USER").setAuthorities(adminUserAuthoritiesDTOS));
     }
 
     @Test
@@ -138,7 +96,6 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(adminUser.getEmail()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(mixedUserRoles.stream().map(Role::getName).toArray())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(adminUserAuthorities.stream().map(Authority::getName).toArray(), basicUserAuthorities.stream().map(Authority::getName).toArray()))));
-                //.andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.contains("BASIC_USER", "BASIC_USER")));
 
         ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
         verify(userService, times(1)).findById(stringCaptor.capture());
