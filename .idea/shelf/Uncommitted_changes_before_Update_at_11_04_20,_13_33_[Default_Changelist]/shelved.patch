@@ -1,0 +1,600 @@
+Index: src/main/java/ch/course223/advanced/Main.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ch.course223.advanced;\n\nimport org.springframework.boot.SpringApplication;\nimport org.springframework.boot.autoconfigure.SpringBootApplication;\n\n@SpringBootApplication\npublic class Main {\n\n\tpublic static void main(String[] args) {\n\t\tSpringApplication.run(Main.class, args);\n\t}\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/java/ch/course223/advanced/Main.java	(revision d1b56d15260bd953486e1d3ce2169f6bf6ee7d43)
++++ src/main/java/ch/course223/advanced/Main.java	(date 1586604250791)
+@@ -2,12 +2,14 @@
+ 
+ import org.springframework.boot.SpringApplication;
+ import org.springframework.boot.autoconfigure.SpringBootApplication;
++import org.springframework.context.ConfigurableApplicationContext;
+ 
+ @SpringBootApplication
+ public class Main {
+ 
+ 	public static void main(String[] args) {
+-		SpringApplication.run(Main.class, args);
++
++		ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+ 	}
+ 
+ }
+Index: src/main/resources/db/migration/V2__DML.sql
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>INSERT INTO public.authority VALUES ('4da5473b-09b4-4941-9556-e75f439ccc39', 'USER_CREATE');\nINSERT INTO public.authority VALUES ('b85ab915-33ed-445f-8d0c-ec8a07505a5a', 'USER_MODIFY_GLOBAL');\nINSERT INTO public.authority VALUES ('d8ced773-78b5-41c8-9c0a-0482de29b51f', 'USER_MODIFY_OWN');\nINSERT INTO public.authority VALUES ('1f7021af-c92b-4c88-843e-862fb5cc9204', 'USER_SEE_GLOBAL');\nINSERT INTO public.authority VALUES ('dfd2440e-eddf-488a-b4a7-225b6e21a484', 'USER_SEE_OWN');\nINSERT INTO public.authority VALUES ('c40a573a-a6bd-413f-b573-64338770e261', 'USER_DELETE');\n\n\nINSERT INTO public.role VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', 'ADMIN');\nINSERT INTO public.role VALUES ('a807f074-53bc-4aa7-a6d2-341928b7dd2a', 'USER');\n\n\nINSERT INTO public.role_authority VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', '4da5473b-09b4-4941-9556-e75f439ccc39');\nINSERT INTO public.role_authority VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', 'b85ab915-33ed-445f-8d0c-ec8a07505a5a');\nINSERT INTO public.role_authority VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', 'd8ced773-78b5-41c8-9c0a-0482de29b51f');\nINSERT INTO public.role_authority VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', 'c40a573a-a6bd-413f-b573-64338770e261');\nINSERT INTO public.role_authority VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', '1f7021af-c92b-4c88-843e-862fb5cc9204');\nINSERT INTO public.role_authority VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', 'dfd2440e-eddf-488a-b4a7-225b6e21a484');\nINSERT INTO public.role_authority VALUES ('a807f074-53bc-4aa7-a6d2-341928b7dd2a', 'd8ced773-78b5-41c8-9c0a-0482de29b51f');\nINSERT INTO public.role_authority VALUES ('a807f074-53bc-4aa7-a6d2-341928b7dd2a', 'dfd2440e-eddf-488a-b4a7-225b6e21a484');\n\n\nINSERT INTO public.users VALUES ('2643dbc0-cd29-4446-84cb-0c98aed89fb8', '2020-12-12', '2020-12-12', 'john.doe@noseryoung.ch', 1, 'John', 'Doe', 0, '$2a$10$XKIRmT.3a4FqYIsFE88opOtNBbzmTxEKSWhsBoT1iUZhtgYqNCS.O');\nINSERT INTO public.users VALUES ('183bd877-f871-4000-b9c7-a7ce92991b5f', '2020-12-12', '2020-12-12', 'jane.doe@noseryoung.ch', 1, 'Jane', 'Doe', 0, '$2a$10$XKIRmT.3a4FqYIsFE88opOtNBbzmTxEKSWhsBoT1iUZhtgYqNCS.O');\n\n\nINSERT INTO public.users_role VALUES ('2643dbc0-cd29-4446-84cb-0c98aed89fb8', '7ea6108f-6163-46ae-8b1f-1adbb1daaef6');\nINSERT INTO public.users_role VALUES ('183bd877-f871-4000-b9c7-a7ce92991b5f', 'a807f074-53bc-4aa7-a6d2-341928b7dd2a');
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/main/resources/db/migration/V2__DML.sql	(revision d1b56d15260bd953486e1d3ce2169f6bf6ee7d43)
++++ src/main/resources/db/migration/V2__DML.sql	(date 1586603413680)
+@@ -6,8 +6,8 @@
+ INSERT INTO public.authority VALUES ('c40a573a-a6bd-413f-b573-64338770e261', 'USER_DELETE');
+ 
+ 
+-INSERT INTO public.role VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', 'ADMIN');
+-INSERT INTO public.role VALUES ('a807f074-53bc-4aa7-a6d2-341928b7dd2a', 'USER');
++INSERT INTO public.role VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', 'ADMIN_USER');
++INSERT INTO public.role VALUES ('a807f074-53bc-4aa7-a6d2-341928b7dd2a', 'BASIC_USER');
+ 
+ 
+ INSERT INTO public.role_authority VALUES ('7ea6108f-6163-46ae-8b1f-1adbb1daaef6', '4da5473b-09b4-4941-9556-e75f439ccc39');
+Index: src/test/java/domainmodels/user/unit/UserController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package domainmodels.user.unit;\n\nimport ch.course223.advanced.domainmodels.authority.Authority;\nimport ch.course223.advanced.domainmodels.authority.AuthorityDTO;\nimport ch.course223.advanced.domainmodels.role.Role;\nimport ch.course223.advanced.domainmodels.role.RoleDTO;\nimport ch.course223.advanced.domainmodels.user.User;\nimport ch.course223.advanced.domainmodels.user.UserDTO;\nimport ch.course223.advanced.domainmodels.user.UserService;\nimport com.fasterxml.jackson.databind.ObjectMapper;\nimport org.junit.Before;\nimport org.junit.Test;\nimport org.junit.runner.RunWith;\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;\nimport org.springframework.boot.test.context.SpringBootTest;\nimport org.springframework.boot.test.mock.mockito.MockBean;\nimport org.springframework.http.MediaType;\nimport org.springframework.security.test.context.support.WithMockUser;\nimport org.springframework.test.context.junit4.SpringRunner;\nimport org.springframework.test.web.servlet.MockMvc;\nimport org.springframework.test.web.servlet.request.MockMvcRequestBuilders;\nimport org.springframework.test.web.servlet.result.MockMvcResultMatchers;\n\nimport java.util.*;\n\nimport static org.hamcrest.collection.IsCollectionWithSize.hasSize;\nimport static org.mockito.ArgumentMatchers.any;\nimport static org.mockito.BDDMockito.given;\nimport static org.mockito.Mockito.*;\n\n@RunWith(SpringRunner.class)\n@SpringBootTest\n@AutoConfigureMockMvc\npublic class UserController {\n\n    @Autowired\n    private MockMvc mvc;\n\n    @MockBean\n    private UserService userService;\n\n    @Before\n    public void setUp(){\n\n        //Business Objects (used in findById, findAll)\n        Set<Authority> basicUserAuthorities = new HashSet<Authority>();\n        basicUserAuthorities.add(new Authority().setName(\"USER_SEE_OWN\"));\n        basicUserAuthorities.add(new Authority().setName(\"USER_MODIFY_OWN\"));\n\n        Set<Authority> adminUserAuthorities = new HashSet<Authority>();\n        adminUserAuthorities.add(new Authority().setName(\"USER_SEE_OWN\"));\n        adminUserAuthorities.add(new Authority().setName(\"USER_SEE_GLOBAL\"));\n        adminUserAuthorities.add(new Authority().setName(\"USER_CREATE\"));\n        adminUserAuthorities.add(new Authority().setName(\"USER_MODIFY_OWN\"));\n        adminUserAuthorities.add(new Authority().setName(\"USER_MODIFY_GLOBAL\"));\n        adminUserAuthorities.add(new Authority().setName(\"USER_DELETE\"));\n\n        Set<Role> basicUserRoles = new HashSet<Role>();\n        basicUserRoles.add(new Role().setName(\"BASIC_USER\").setAuthorities(basicUserAuthorities);\n\n        Set<Role> adminUserRoles = new HashSet<Role>();\n        adminUserRoles.add(new Role().setName(\"ADMIN_USER\").setAuthorities(adminUserAuthorities));\n\n        User basicUser = new User().setRoles(basicUserRoles).setFirstName(\"jane\").setLastName(\"doe\").setEmail(\"jane.doe@noseryoung.ch\");\n        User adminUser = new User().setRoles(adminUserRoles).setFirstName(\"john\").setLastName(\"doe\").setEmail(\"john.doe@noseryoung.ch\");\n\n        //Mocks\n        given(userService.findById(anyString())).willReturn(basicUser);\n\n        given(userService.findAll()).willReturn(Arrays.asList(basicUser, adminUser));\n\n        given(userService.save(any(User.class))).will(invocation -> {\n            UUID uuid = UUID.randomUUID();\n            User userDTO = invocation.getArgument(0);\n            return userDTO.setId(uuid.toString());\n        });\n\n        given(userService.updateById(anyString(), any(User.class))).will(invocation -> {\n            if (\"non-existent\".equals(invocation.getArgument(0))) throw new NoSuchElementException();\n\n            return ((User) invocation.getArgument(1)).setId(invocation.getArgument(0));\n        });\n\n    }\n\n    @Test\n    @WithMockUser(roles = {\"BASIC_USER\"})\n    public void findById_requestUserById_returnsUser() throws Exception {\n        UUID uuid = UUID.randomUUID();\n        mvc.perform(\n                MockMvcRequestBuilders.get(\"/users/{id}\", uuid.toString())\n                        .accept(MediaType.APPLICATION_JSON))\n                .andExpect(MockMvcResultMatchers.status().isOk())\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.firstName\").value(\"john\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.lastName\").value(\"doe\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.email\").value(\"john.doe@noseryoung.ch\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.roles[0].name\").value(\"USER\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.roles[0].[0].name\").value(\"USER_SEE_OWN\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.roles[0].[1].name\").value(\"USER_MODIFY_OWN\"));\n\n        verify(userService, times(1)).findById(uuid.toString());\n    }\n\n    @Test\n    @WithMockUser\n    public void findAll_requestAllUsers_returnsAllUsers() throws Exception {\n        mvc.perform(\n                MockMvcRequestBuilders.get(\"/users\")\n                        .accept(MediaType.APPLICATION_JSON))\n                .andExpect(MockMvcResultMatchers.status().isOk())\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$\", hasSize(2)))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[0].email\").value(\"john.doe@noseryoung.ch\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[1].email\").value(\"jane.doe@noseryoung.ch\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[0].firstName\").value(\"john\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[1].firstName\").value(\"jane\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[0].lastName\").value(\"doe\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[1].lastName\").value(\"doe\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[0].roles[0].name\").value(\"ADMIN\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[1].roles[0].name\").value(\"USER\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[0].roles[0].[0].name\").value(\"USER_SEE_OWN\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[0].roles[0].[1].name\").value(\"USER_MODIFY_OWN\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[1].roles[0].[0].name\").value(\"USER_SEE_OWN\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[1].roles[0].[1].name\").value(\"USER_MODIFY_OWN\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[1].roles[0].[2].name\").value(\"USER_CREATE\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[1].roles[0].[3].name\").value(\"USER_MODIFY_OWN\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[1].roles[0].[4].name\").value(\"USER_MODIFY_GLOBAL\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$[1].roles[0].[5].name\").value(\"USER_DELETE\"));\n\n        verify(userService, times(1)).findAll();\n    }\n\n    @Test\n    @WithMockUser\n    public void create_deliverUserDTOToCreate_thenReturnCreatedUserDTO() throws Exception {\n        Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();\n        basicUserAuthorityDTOS.add(new AuthorityDTO().setName(\"USER_SEE_OWN\"));\n        basicUserAuthorityDTOS.add(new AuthorityDTO().setName(\"USER_MODIFY_OWN\"));\n\n        Set<RoleDTO> basicUserRoleDTOS = new HashSet<RoleDTO>();\n        basicUserRoleDTOS.add(new RoleDTO().setName(\"USER\").setAuthorities(basicUserAuthorityDTOS);\n\n        UserDTO userDTO = new UserDTO().setRoles(basicUserRoleDTOS).setFirstName(\"jane\").setLastName(\"doe\").setEmail(\"jane.doe@noseryoung.ch\");\n\n        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTO);\n\n        mvc.perform(\n                MockMvcRequestBuilders\n                        .post(\"/users\")\n                        .content(userDTOAsJsonString)\n                        .contentType(MediaType.APPLICATION_JSON)\n                        .accept(MediaType.APPLICATION_JSON))\n                .andExpect(MockMvcResultMatchers.status().isCreated())\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.firstName\").value(\"john\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.lastName\").value(\"doe\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.email\").value(\"john.doe@noseryoung.ch\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.roles[0].name\").value(\"USER\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.roles[0].[0].name\").value(\"USER_SEE_OWN\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.roles[0].[1].name\").value(\"USER_MODIFY_OWN\"));\n\n        verify(userService, times(1)).save(any(User.class));\n    }\n\n    @Test\n    @WithMockUser\n    public void updateUserById_deliverUserDTOToUpdate_thenReturnUpdatedUserDTO() throws Exception {\n        UUID uuid = UUID.randomUUID();\n        Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();\n        basicUserAuthorityDTOS.add(new AuthorityDTO().setName(\"USER_SEE_OWN\"));\n        basicUserAuthorityDTOS.add(new AuthorityDTO().setName(\"USER_MODIFY_OWN\"));\n\n        Set<RoleDTO> basicUserRoleDTOS = new HashSet<RoleDTO>();\n        basicUserRoleDTOS.add(new RoleDTO().setName(\"USER\").setAuthorities(basicUserAuthorityDTOS);\n\n        UserDTO userDTO = new UserDTO().setRoles(basicUserRoleDTOS).setFirstName(\"jane\").setLastName(\"doe\").setEmail(\"jane.doe@noseryoung.ch\");\n\n        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTO);\n\n        mvc.perform(\n                MockMvcRequestBuilders.put(\"/users/{id}\", uuid.toString())\n                        .content(userDTOAsJsonString)\n                        .contentType(MediaType.APPLICATION_JSON)\n                        .accept(MediaType.APPLICATION_JSON))\n                .andExpect(MockMvcResultMatchers.status().isOk())\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.firstName\").value(\"john\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.lastName\").value(\"doe\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.email\").value(\"john.doe@noseryoung.ch\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.roles[0].name\").value(\"USER\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.roles[0].[0].name\").value(\"USER_SEE_OWN\"))\n                .andExpect(MockMvcResultMatchers.jsonPath(\"$.roles[0].[1].name\").value(\"USER_MODIFY_OWN\"));\n\n        verify(userService, times(1)).updateById(anyString(), any(User.class));\n    }\n\n}
+===================================================================
+--- src/test/java/domainmodels/user/unit/UserController.java	(revision d1b56d15260bd953486e1d3ce2169f6bf6ee7d43)
++++ src/test/java/ch/course223/advanced/unit/UserController.java	(date 1586604758051)
+@@ -1,4 +1,4 @@
+-package domainmodels.user.unit;
++package ch.course223.advanced.unit;
+ 
+ import ch.course223.advanced.domainmodels.authority.Authority;
+ import ch.course223.advanced.domainmodels.authority.AuthorityDTO;
+@@ -17,6 +17,7 @@
+ import org.springframework.boot.test.mock.mockito.MockBean;
+ import org.springframework.http.MediaType;
+ import org.springframework.security.test.context.support.WithMockUser;
++import org.springframework.test.context.TestPropertySource;
+ import org.springframework.test.context.junit4.SpringRunner;
+ import org.springframework.test.web.servlet.MockMvc;
+ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+@@ -32,6 +33,7 @@
+ @RunWith(SpringRunner.class)
+ @SpringBootTest
+ @AutoConfigureMockMvc
++@TestPropertySource("classpath:application-test.properties")
+ public class UserController {
+ 
+     @Autowired
+@@ -57,18 +59,18 @@
+         adminUserAuthorities.add(new Authority().setName("USER_DELETE"));
+ 
+         Set<Role> basicUserRoles = new HashSet<Role>();
+-        basicUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities);
++        basicUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
+ 
+         Set<Role> adminUserRoles = new HashSet<Role>();
+         adminUserRoles.add(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities));
+ 
+-        User basicUser = new User().setRoles(basicUserRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+         User adminUser = new User().setRoles(adminUserRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
++        User basicUser = new User().setRoles(basicUserRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+ 
+         //Mocks
+         given(userService.findById(anyString())).willReturn(basicUser);
+ 
+-        given(userService.findAll()).willReturn(Arrays.asList(basicUser, adminUser));
++        given(userService.findAll()).willReturn(Arrays.asList(adminUser, basicUser));
+ 
+         given(userService.save(any(User.class))).will(invocation -> {
+             UUID uuid = UUID.randomUUID();
+@@ -92,10 +94,10 @@
+                 MockMvcRequestBuilders.get("/users/{id}", uuid.toString())
+                         .accept(MediaType.APPLICATION_JSON))
+                 .andExpect(MockMvcResultMatchers.status().isOk())
+-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("john"))
++                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value("jane"))
+                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value("doe"))
+-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("john.doe@noseryoung.ch"))
+-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].name").value("USER"))
++                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value("jane.doe@noseryoung.ch"))
++                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].name").value("BASIC_USER"))
+                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[0].name").value("USER_SEE_OWN"))
+                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[0].[1].name").value("USER_MODIFY_OWN"));
+ 
+@@ -116,8 +118,8 @@
+                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].firstName").value("jane"))
+                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].lastName").value("doe"))
+                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].lastName").value("doe"))
+-                .andExpect(MockMvcResultMatchers.jsonPath("$[0].roles[0].name").value("ADMIN"))
+-                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].name").value("USER"))
++                .andExpect(MockMvcResultMatchers.jsonPath("$[0].roles[0].name").value("ADMIN_USER"))
++                .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].name").value("BASIC_USER"))
+                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].roles[0].[0].name").value("USER_SEE_OWN"))
+                 .andExpect(MockMvcResultMatchers.jsonPath("$[0].roles[0].[1].name").value("USER_MODIFY_OWN"))
+                 .andExpect(MockMvcResultMatchers.jsonPath("$[1].roles[0].[0].name").value("USER_SEE_OWN"))
+@@ -138,7 +140,7 @@
+         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
+ 
+         Set<RoleDTO> basicUserRoleDTOS = new HashSet<RoleDTO>();
+-        basicUserRoleDTOS.add(new RoleDTO().setName("USER").setAuthorities(basicUserAuthorityDTOS);
++        basicUserRoleDTOS.add(new RoleDTO().setName("USER").setAuthorities(basicUserAuthorityDTOS));
+ 
+         UserDTO userDTO = new UserDTO().setRoles(basicUserRoleDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+ 
+@@ -170,7 +172,7 @@
+         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
+ 
+         Set<RoleDTO> basicUserRoleDTOS = new HashSet<RoleDTO>();
+-        basicUserRoleDTOS.add(new RoleDTO().setName("USER").setAuthorities(basicUserAuthorityDTOS);
++        basicUserRoleDTOS.add(new RoleDTO().setName("USER").setAuthorities(basicUserAuthorityDTOS));
+ 
+         UserDTO userDTO = new UserDTO().setRoles(basicUserRoleDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+ 
+Index: src/test/java/domainmodels/user/unit/UserRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package domainmodels.user.unit;\n\npublic class UserRepository {\n}\n
+===================================================================
+--- src/test/java/domainmodels/user/unit/UserRepository.java	(revision d1b56d15260bd953486e1d3ce2169f6bf6ee7d43)
++++ src/test/java/ch/course223/advanced/unit/UserRepository.java	(date 1586604499033)
+@@ -1,4 +1,4 @@
+-package domainmodels.user.unit;
++package ch.course223.advanced.unit;
+ 
+ public class UserRepository {
+ }
+Index: build/generated/sources/annotationProcessor/java/main/ch/course223/advanced/domainmodels/authority/mapper/AuthorityMapperExtendedImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build/generated/sources/annotationProcessor/java/main/ch/course223/advanced/domainmodels/authority/mapper/AuthorityMapperExtendedImpl.java	(date 1586604259703)
++++ build/generated/sources/annotationProcessor/java/main/ch/course223/advanced/domainmodels/authority/mapper/AuthorityMapperExtendedImpl.java	(date 1586604259703)
+@@ -0,0 +1,103 @@
++package ch.course223.advanced.domainmodels.authority.mapper;
++
++import ch.course223.advanced.domainmodels.authority.Authority;
++import ch.course223.advanced.domainmodels.authority.AuthorityDTO;
++import java.util.ArrayList;
++import java.util.HashSet;
++import java.util.List;
++import java.util.Set;
++import javax.annotation.processing.Generated;
++import org.springframework.stereotype.Component;
++
++@Generated(
++    value = "org.mapstruct.ap.MappingProcessor",
++    date = "2020-04-11T13:24:19+0200",
++    comments = "version: 1.3.0.Final, compiler: javac, environment: Java 13.0.1 (Private Build)"
++)
++@Component
++public class AuthorityMapperExtendedImpl implements AuthorityMapperExtended {
++
++    @Override
++    public Authority fromDTO(AuthorityDTO dto) {
++        if ( dto == null ) {
++            return null;
++        }
++
++        Authority authority = new Authority();
++
++        authority.setId( dto.getId() );
++        authority.setName( dto.getName() );
++
++        return authority;
++    }
++
++    @Override
++    public List<Authority> fromDTOs(List<AuthorityDTO> dtos) {
++        if ( dtos == null ) {
++            return null;
++        }
++
++        List<Authority> list = new ArrayList<Authority>( dtos.size() );
++        for ( AuthorityDTO authorityDTO : dtos ) {
++            list.add( fromDTO( authorityDTO ) );
++        }
++
++        return list;
++    }
++
++    @Override
++    public Set<Authority> fromDTOs(Set<AuthorityDTO> dtos) {
++        if ( dtos == null ) {
++            return null;
++        }
++
++        Set<Authority> set = new HashSet<Authority>( Math.max( (int) ( dtos.size() / .75f ) + 1, 16 ) );
++        for ( AuthorityDTO authorityDTO : dtos ) {
++            set.add( fromDTO( authorityDTO ) );
++        }
++
++        return set;
++    }
++
++    @Override
++    public AuthorityDTO toDTO(Authority dm) {
++        if ( dm == null ) {
++            return null;
++        }
++
++        AuthorityDTO authorityDTO = new AuthorityDTO();
++
++        authorityDTO.setId( dm.getId() );
++        authorityDTO.setName( dm.getName() );
++
++        return authorityDTO;
++    }
++
++    @Override
++    public List<AuthorityDTO> toDTOs(List<Authority> dms) {
++        if ( dms == null ) {
++            return null;
++        }
++
++        List<AuthorityDTO> list = new ArrayList<AuthorityDTO>( dms.size() );
++        for ( Authority authority : dms ) {
++            list.add( toDTO( authority ) );
++        }
++
++        return list;
++    }
++
++    @Override
++    public Set<AuthorityDTO> toDTOs(Set<Authority> dms) {
++        if ( dms == null ) {
++            return null;
++        }
++
++        Set<AuthorityDTO> set = new HashSet<AuthorityDTO>( Math.max( (int) ( dms.size() / .75f ) + 1, 16 ) );
++        for ( Authority authority : dms ) {
++            set.add( toDTO( authority ) );
++        }
++
++        return set;
++    }
++}
+Index: build/generated/sources/annotationProcessor/java/main/ch/course223/advanced/domainmodels/user/mapper/UserMapperImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ch.course223.advanced.domainmodels.user.mapper;\n\nimport ch.course223.advanced.domainmodels.user.User;\nimport ch.course223.advanced.domainmodels.user.UserDTO;\nimport java.util.ArrayList;\nimport java.util.HashSet;\nimport java.util.List;\nimport java.util.Set;\nimport javax.annotation.processing.Generated;\nimport org.springframework.stereotype.Component;\n\n@Generated(\n    value = \"org.mapstruct.ap.MappingProcessor\",\n    date = \"2020-04-11T12:09:57+0200\",\n    comments = \"version: 1.3.0.Final, compiler: javac, environment: Java 13.0.1 (Private Build)\"\n)\n@Component\npublic class UserMapperImpl implements UserMapper {\n\n    @Override\n    public User fromDTO(UserDTO dto) {\n        if ( dto == null ) {\n            return null;\n        }\n\n        User user = new User();\n\n        user.setId( dto.getId() );\n        user.setFirstName( dto.getFirstName() );\n        user.setLastName( dto.getLastName() );\n\n        return user;\n    }\n\n    @Override\n    public List<User> fromDTOs(List<UserDTO> dtos) {\n        if ( dtos == null ) {\n            return null;\n        }\n\n        List<User> list = new ArrayList<User>( dtos.size() );\n        for ( UserDTO userDTO : dtos ) {\n            list.add( fromDTO( userDTO ) );\n        }\n\n        return list;\n    }\n\n    @Override\n    public Set<User> fromDTOs(Set<UserDTO> dtos) {\n        if ( dtos == null ) {\n            return null;\n        }\n\n        Set<User> set = new HashSet<User>( Math.max( (int) ( dtos.size() / .75f ) + 1, 16 ) );\n        for ( UserDTO userDTO : dtos ) {\n            set.add( fromDTO( userDTO ) );\n        }\n\n        return set;\n    }\n\n    @Override\n    public UserDTO toDTO(User dm) {\n        if ( dm == null ) {\n            return null;\n        }\n\n        UserDTO userDTO = new UserDTO();\n\n        userDTO.setId( dm.getId() );\n        userDTO.setFirstName( dm.getFirstName() );\n        userDTO.setLastName( dm.getLastName() );\n\n        return userDTO;\n    }\n\n    @Override\n    public List<UserDTO> toDTOs(List<User> dms) {\n        if ( dms == null ) {\n            return null;\n        }\n\n        List<UserDTO> list = new ArrayList<UserDTO>( dms.size() );\n        for ( User user : dms ) {\n            list.add( toDTO( user ) );\n        }\n\n        return list;\n    }\n\n    @Override\n    public Set<UserDTO> toDTOs(Set<User> dms) {\n        if ( dms == null ) {\n            return null;\n        }\n\n        Set<UserDTO> set = new HashSet<UserDTO>( Math.max( (int) ( dms.size() / .75f ) + 1, 16 ) );\n        for ( User user : dms ) {\n            set.add( toDTO( user ) );\n        }\n\n        return set;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build/generated/sources/annotationProcessor/java/main/ch/course223/advanced/domainmodels/user/mapper/UserMapperImpl.java	(revision d1b56d15260bd953486e1d3ce2169f6bf6ee7d43)
++++ build/generated/sources/annotationProcessor/java/main/ch/course223/advanced/domainmodels/user/mapper/UserMapperImpl.java	(date 1586604259907)
+@@ -1,5 +1,9 @@
+ package ch.course223.advanced.domainmodels.user.mapper;
+ 
++import ch.course223.advanced.domainmodels.authority.Authority;
++import ch.course223.advanced.domainmodels.authority.AuthorityDTO;
++import ch.course223.advanced.domainmodels.role.Role;
++import ch.course223.advanced.domainmodels.role.RoleDTO;
+ import ch.course223.advanced.domainmodels.user.User;
+ import ch.course223.advanced.domainmodels.user.UserDTO;
+ import java.util.ArrayList;
+@@ -11,7 +15,7 @@
+ 
+ @Generated(
+     value = "org.mapstruct.ap.MappingProcessor",
+-    date = "2020-04-11T12:09:57+0200",
++    date = "2020-04-11T13:24:19+0200",
+     comments = "version: 1.3.0.Final, compiler: javac, environment: Java 13.0.1 (Private Build)"
+ )
+ @Component
+@@ -28,6 +32,8 @@
+         user.setId( dto.getId() );
+         user.setFirstName( dto.getFirstName() );
+         user.setLastName( dto.getLastName() );
++        user.setEmail( dto.getEmail() );
++        user.setRoles( roleDTOSetToRoleSet( dto.getRoles() ) );
+ 
+         return user;
+     }
+@@ -71,6 +77,8 @@
+         userDTO.setId( dm.getId() );
+         userDTO.setFirstName( dm.getFirstName() );
+         userDTO.setLastName( dm.getLastName() );
++        userDTO.setEmail( dm.getEmail() );
++        userDTO.setRoles( roleSetToRoleDTOSet( dm.getRoles() ) );
+ 
+         return userDTO;
+     }
+@@ -102,4 +110,110 @@
+ 
+         return set;
+     }
++
++    protected Authority authorityDTOToAuthority(AuthorityDTO authorityDTO) {
++        if ( authorityDTO == null ) {
++            return null;
++        }
++
++        Authority authority = new Authority();
++
++        authority.setId( authorityDTO.getId() );
++        authority.setName( authorityDTO.getName() );
++
++        return authority;
++    }
++
++    protected Set<Authority> authorityDTOSetToAuthoritySet(Set<AuthorityDTO> set) {
++        if ( set == null ) {
++            return null;
++        }
++
++        Set<Authority> set1 = new HashSet<Authority>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
++        for ( AuthorityDTO authorityDTO : set ) {
++            set1.add( authorityDTOToAuthority( authorityDTO ) );
++        }
++
++        return set1;
++    }
++
++    protected Role roleDTOToRole(RoleDTO roleDTO) {
++        if ( roleDTO == null ) {
++            return null;
++        }
++
++        Role role = new Role();
++
++        role.setId( roleDTO.getId() );
++        role.setName( roleDTO.getName() );
++        role.setAuthorities( authorityDTOSetToAuthoritySet( roleDTO.getAuthorities() ) );
++
++        return role;
++    }
++
++    protected Set<Role> roleDTOSetToRoleSet(Set<RoleDTO> set) {
++        if ( set == null ) {
++            return null;
++        }
++
++        Set<Role> set1 = new HashSet<Role>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
++        for ( RoleDTO roleDTO : set ) {
++            set1.add( roleDTOToRole( roleDTO ) );
++        }
++
++        return set1;
++    }
++
++    protected AuthorityDTO authorityToAuthorityDTO(Authority authority) {
++        if ( authority == null ) {
++            return null;
++        }
++
++        AuthorityDTO authorityDTO = new AuthorityDTO();
++
++        authorityDTO.setId( authority.getId() );
++        authorityDTO.setName( authority.getName() );
++
++        return authorityDTO;
++    }
++
++    protected Set<AuthorityDTO> authoritySetToAuthorityDTOSet(Set<Authority> set) {
++        if ( set == null ) {
++            return null;
++        }
++
++        Set<AuthorityDTO> set1 = new HashSet<AuthorityDTO>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
++        for ( Authority authority : set ) {
++            set1.add( authorityToAuthorityDTO( authority ) );
++        }
++
++        return set1;
++    }
++
++    protected RoleDTO roleToRoleDTO(Role role) {
++        if ( role == null ) {
++            return null;
++        }
++
++        RoleDTO roleDTO = new RoleDTO();
++
++        roleDTO.setId( role.getId() );
++        roleDTO.setName( role.getName() );
++        roleDTO.setAuthorities( authoritySetToAuthorityDTOSet( role.getAuthorities() ) );
++
++        return roleDTO;
++    }
++
++    protected Set<RoleDTO> roleSetToRoleDTOSet(Set<Role> set) {
++        if ( set == null ) {
++            return null;
++        }
++
++        Set<RoleDTO> set1 = new HashSet<RoleDTO>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
++        for ( Role role : set ) {
++            set1.add( roleToRoleDTO( role ) );
++        }
++
++        return set1;
++    }
+ }
+Index: build/generated/sources/annotationProcessor/java/main/ch/course223/advanced/domainmodels/role/mapper/RoleMapperExtendedImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build/generated/sources/annotationProcessor/java/main/ch/course223/advanced/domainmodels/role/mapper/RoleMapperExtendedImpl.java	(date 1586604260187)
++++ build/generated/sources/annotationProcessor/java/main/ch/course223/advanced/domainmodels/role/mapper/RoleMapperExtendedImpl.java	(date 1586604260187)
+@@ -0,0 +1,159 @@
++package ch.course223.advanced.domainmodels.role.mapper;
++
++import ch.course223.advanced.domainmodels.authority.Authority;
++import ch.course223.advanced.domainmodels.authority.AuthorityDTO;
++import ch.course223.advanced.domainmodels.role.Role;
++import ch.course223.advanced.domainmodels.role.RoleDTO;
++import java.util.ArrayList;
++import java.util.HashSet;
++import java.util.List;
++import java.util.Set;
++import javax.annotation.processing.Generated;
++import org.springframework.stereotype.Component;
++
++@Generated(
++    value = "org.mapstruct.ap.MappingProcessor",
++    date = "2020-04-11T13:24:20+0200",
++    comments = "version: 1.3.0.Final, compiler: javac, environment: Java 13.0.1 (Private Build)"
++)
++@Component
++public class RoleMapperExtendedImpl implements RoleMapperExtended {
++
++    @Override
++    public Role fromDTO(RoleDTO dto) {
++        if ( dto == null ) {
++            return null;
++        }
++
++        Role role = new Role();
++
++        role.setId( dto.getId() );
++        role.setName( dto.getName() );
++        role.setAuthorities( authorityDTOSetToAuthoritySet( dto.getAuthorities() ) );
++
++        return role;
++    }
++
++    @Override
++    public List<Role> fromDTOs(List<RoleDTO> dtos) {
++        if ( dtos == null ) {
++            return null;
++        }
++
++        List<Role> list = new ArrayList<Role>( dtos.size() );
++        for ( RoleDTO roleDTO : dtos ) {
++            list.add( fromDTO( roleDTO ) );
++        }
++
++        return list;
++    }
++
++    @Override
++    public Set<Role> fromDTOs(Set<RoleDTO> dtos) {
++        if ( dtos == null ) {
++            return null;
++        }
++
++        Set<Role> set = new HashSet<Role>( Math.max( (int) ( dtos.size() / .75f ) + 1, 16 ) );
++        for ( RoleDTO roleDTO : dtos ) {
++            set.add( fromDTO( roleDTO ) );
++        }
++
++        return set;
++    }
++
++    @Override
++    public RoleDTO toDTO(Role dm) {
++        if ( dm == null ) {
++            return null;
++        }
++
++        RoleDTO roleDTO = new RoleDTO();
++
++        roleDTO.setId( dm.getId() );
++        roleDTO.setName( dm.getName() );
++        roleDTO.setAuthorities( authoritySetToAuthorityDTOSet( dm.getAuthorities() ) );
++
++        return roleDTO;
++    }
++
++    @Override
++    public List<RoleDTO> toDTOs(List<Role> dms) {
++        if ( dms == null ) {
++            return null;
++        }
++
++        List<RoleDTO> list = new ArrayList<RoleDTO>( dms.size() );
++        for ( Role role : dms ) {
++            list.add( toDTO( role ) );
++        }
++
++        return list;
++    }
++
++    @Override
++    public Set<RoleDTO> toDTOs(Set<Role> dms) {
++        if ( dms == null ) {
++            return null;
++        }
++
++        Set<RoleDTO> set = new HashSet<RoleDTO>( Math.max( (int) ( dms.size() / .75f ) + 1, 16 ) );
++        for ( Role role : dms ) {
++            set.add( toDTO( role ) );
++        }
++
++        return set;
++    }
++
++    protected Authority authorityDTOToAuthority(AuthorityDTO authorityDTO) {
++        if ( authorityDTO == null ) {
++            return null;
++        }
++
++        Authority authority = new Authority();
++
++        authority.setId( authorityDTO.getId() );
++        authority.setName( authorityDTO.getName() );
++
++        return authority;
++    }
++
++    protected Set<Authority> authorityDTOSetToAuthoritySet(Set<AuthorityDTO> set) {
++        if ( set == null ) {
++            return null;
++        }
++
++        Set<Authority> set1 = new HashSet<Authority>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
++        for ( AuthorityDTO authorityDTO : set ) {
++            set1.add( authorityDTOToAuthority( authorityDTO ) );
++        }
++
++        return set1;
++    }
++
++    protected AuthorityDTO authorityToAuthorityDTO(Authority authority) {
++        if ( authority == null ) {
++            return null;
++        }
++
++        AuthorityDTO authorityDTO = new AuthorityDTO();
++
++        authorityDTO.setId( authority.getId() );
++        authorityDTO.setName( authority.getName() );
++
++        return authorityDTO;
++    }
++
++    protected Set<AuthorityDTO> authoritySetToAuthorityDTOSet(Set<Authority> set) {
++        if ( set == null ) {
++            return null;
++        }
++
++        Set<AuthorityDTO> set1 = new HashSet<AuthorityDTO>( Math.max( (int) ( set.size() / .75f ) + 1, 16 ) );
++        for ( Authority authority : set ) {
++            set1.add( authorityToAuthorityDTO( authority ) );
++        }
++
++        return set1;
++    }
++}
+Index: src/test/java/domainmodels/user/unit/UserServiceImpl.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package domainmodels.user.unit;\n\npublic class UserServiceImpl {\n}\n
+===================================================================
+--- src/test/java/domainmodels/user/unit/UserServiceImpl.java	(revision d1b56d15260bd953486e1d3ce2169f6bf6ee7d43)
++++ src/test/java/ch/course223/advanced/unit/UserServiceImpl.java	(date 1586604499021)
+@@ -1,4 +1,4 @@
+-package domainmodels.user.unit;
++package ch.course223.advanced.unit;
+ 
+ public class UserServiceImpl {
+ }
