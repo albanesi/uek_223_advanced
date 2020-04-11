@@ -10,6 +10,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
     private UserService userService;
@@ -29,7 +30,7 @@ public class UserController {
 
     @GetMapping({"", "/"})
     public @ResponseBody
-    ResponseEntity<List<UserDTO>> getAll() {
+    ResponseEntity<List<UserDTO>> findAll() {
         List<User> users = userService.findAll();
         return new ResponseEntity<>(userMapper.toDTOs(users), HttpStatus.OK);
     }

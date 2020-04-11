@@ -1,6 +1,5 @@
 package domainmodels.user.unit;
 
-
 import ch.course223.advanced.domainmodels.user.UserService;
 import org.junit.Before;
 import org.junit.Test;
