@@ -13,6 +13,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -30,6 +31,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,31 +50,77 @@ public class UserController {
     @MockBean
     private UserService userService;
 
+    private Set<Authority> basicUserAuthorities;
+    private Set<Authority> adminUserAuthorities;
+    private Set<AuthorityDTO> basicUserAuthoritiesDTOS;
+    private Set<AuthorityDTO> adminUserAuthoritiesDTOS;
+
+    private Set<Role> basicUserRoles;
+    private Set<Role> adminUserRoles;
+    private Set<Role> mixedUserRoles;
+    private Set<RoleDTO> mixedUserRolesDTOS;
+
     @Before
     public void setUp(){
+
+        Stream<Authority> basicUserAuthorityStream = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_MODIFY_OWN"));
+        Stream<Authority> adminUserAuthorityStream = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_SEE_GLOBAL"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY_OWN"), new Authority().setName("USER_MODIFY_GLOBAL"), new Authority().setName("USER_DELETE"));
+        Stream<AuthorityDTO> basicUserAuthoritiesDTOSStream = Stream.of(new AuthorityDTO().setName("USER_SEE_OWN"), new AuthorityDTO().setName("USER_MODIFY_OWN"));
+        Stream<AuthorityDTO> adminUserAuthoritiesDTOSStream = Stream.of(new AuthorityDTO().setName("USER_SEE_OWN"), new AuthorityDTO().setName("USER_SEE_GLOBAL"), new AuthorityDTO().setName("USER_CREATE"), new AuthorityDTO().setName("USER_MODIFY_OWN"), new AuthorityDTO().setName("USER_MODIFY_GLOBAL"), new AuthorityDTO().setName("USER_DELETE"));
+
+        basicUserAuthorities = basicUserAuthorityStream.collect(Collectors.toSet());
+
+        adminUserAuthorities = adminUserAuthorityStream.collect(Collectors.toSet());
+
+        /*basicUserAuthorities = new HashSet<Authority>();
+        basicUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
+        basicUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
+
+        adminUserAuthorities = new HashSet<Authority>();
+        adminUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
+        adminUserAuthorities.add(new Authority().setName("USER_SEE_GLOBAL"));
+        adminUserAuthorities.add(new Authority().setName("USER_CREATE"));
+        adminUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
+        adminUserAuthorities.add(new Authority().setName("USER_MODIFY_GLOBAL"));
+        adminUserAuthorities.add(new Authority().setName("USER_DELETE"));*/
+
+        basicUserAuthoritiesDTOS = basicUserAuthoritiesDTOSStream.collect(Collectors.toSet());
+
+        adminUserAuthoritiesDTOS = adminUserAuthoritiesDTOSStream.collect(Collectors.toSet());
+
+        /*basicUserAuthoritiesDTOS = new HashSet<>();
+        basicUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
+        basicUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
+
+        adminUserAuthoritiesDTOS = new HashSet<>();
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_GLOBAL"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_CREATE"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_GLOBAL"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_DELETE"));*/
+
+
+        basicUserRoles = new HashSet<Role>();
+        basicUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
+
+        adminUserRoles = new HashSet<Role>();
+        adminUserRoles.add(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities));
+
+        mixedUserRoles = new HashSet<Role>();
+        mixedUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
+        mixedUserRoles.add(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities));
+
+        mixedUserRolesDTOS = new HashSet<RoleDTO>();
+        mixedUserRolesDTOS.add(new RoleDTO().setName("BASIC_USER").setAuthorities(basicUserAuthoritiesDTOS));
+        mixedUserRolesDTOS.add(new RoleDTO().setName("ADMIN_USER").setAuthorities(adminUserAuthoritiesDTOS));
     }
 
     @Test
     @WithMockUser
     public void findById_requestUserById_returnsUser() throws Exception {
 
-        Set<Authority> basicUserAuthorities = new HashSet<Authority>();
-        basicUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
-        basicUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
-
-        Set<Authority> adminUserAuthorities = new HashSet<Authority>();
-        adminUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
-        adminUserAuthorities.add(new Authority().setName("USER_SEE_GLOBAL"));
-        adminUserAuthorities.add(new Authority().setName("USER_CREATE"));
-        adminUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
-        adminUserAuthorities.add(new Authority().setName("USER_MODIFY_GLOBAL"));
-        adminUserAuthorities.add(new Authority().setName("USER_DELETE"));
-
-        Set<Role> userRoles = new HashSet<Role>();
-        userRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
-        userRoles.add(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities));
-
-        User adminUser = new User().setRoles(userRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+        User adminUser = new User().setRoles(mixedUserRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
 
         given(userService.findById(anyString())).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
@@ -88,7 +136,7 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(adminUser.getFirstName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(adminUser.getLastName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(adminUser.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(userRoles.stream().map(Role::getName).toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(mixedUserRoles.stream().map(Role::getName).toArray())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(adminUserAuthorities.stream().map(Authority::getName).toArray(), basicUserAuthorities.stream().map(Authority::getName).toArray()))));
                 //.andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.contains("BASIC_USER", "BASIC_USER")));
 
@@ -100,23 +148,6 @@ public class UserController {
     @Test
     @WithMockUser
     public void findAll_requestAllUsers_returnsAllUsers() throws Exception {
-        Set<Authority> basicUserAuthorities = new HashSet<Authority>();
-        basicUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
-        basicUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
-
-        Set<Authority> adminUserAuthorities = new HashSet<Authority>();
-        adminUserAuthorities.add(new Authority().setName("USER_SEE_OWN"));
-        adminUserAuthorities.add(new Authority().setName("USER_SEE_GLOBAL"));
-        adminUserAuthorities.add(new Authority().setName("USER_CREATE"));
-        adminUserAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
-        adminUserAuthorities.add(new Authority().setName("USER_MODIFY_GLOBAL"));
-        adminUserAuthorities.add(new Authority().setName("USER_DELETE"));
-
-        Set<Role> basicUserRoles = new HashSet<Role>();
-        basicUserRoles.add(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities));
-
-        Set<Role> adminUserRoles = new HashSet<Role>();
-        adminUserRoles.add(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities));
 
         User basicUser = new User().setRoles(basicUserRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
         User adminUser = new User().setRoles(adminUserRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
@@ -142,24 +173,7 @@ public class UserController {
     @WithMockUser
     public void create_deliverUserDTOToCreate_returnCreatedUserDTO() throws Exception {
 
-        Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<>();
-        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
-        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
-
-        Set<AuthorityDTO> adminUserAuthoritiesDTOS = new HashSet<>();
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_GLOBAL"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_CREATE"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_GLOBAL"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_DELETE"));
-
-        Set<RoleDTO> userRoleDTOS = new HashSet<RoleDTO>();
-        userRoleDTOS.add(new RoleDTO().setName("BASIC_USER").setAuthorities(basicUserAuthorityDTOS));
-        userRoleDTOS.add(new RoleDTO().setName("ADMIN_USER").setAuthorities(adminUserAuthoritiesDTOS));
-
-
-        UserDTO userDTO = new UserDTO().setRoles(userRoleDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+        UserDTO userDTO = new UserDTO().setRoles(mixedUserRolesDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
 
         String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTO);
 
@@ -180,38 +194,23 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userDTO.getFirstName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userDTO.getLastName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userDTO.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(userRoleDTOS.stream().map(RoleDTO::getName).toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(basicUserAuthorityDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray()))));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(mixedUserRolesDTOS.stream().map(RoleDTO::getName).toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(basicUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray()))));
 
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
         verify(userService, times(1)).save(userCaptor.capture());
         Assert.assertEquals(userDTO.getFirstName(), userCaptor.getValue().getFirstName());
         Assert.assertEquals(userDTO.getLastName(), userCaptor.getValue().getLastName());
         Assert.assertEquals(userDTO.getEmail(), userCaptor.getValue().getEmail());
-        Assert.assertThat(userRoleDTOS.stream().map(RoleDTO::getName).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getName).toArray()));
-        Assert.assertThat(Arrays.stream(ArrayUtils.addAll(basicUserAuthorityDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray())).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()));
+        Assert.assertThat(mixedUserRolesDTOS.stream().map(RoleDTO::getName).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getName).toArray()));
+        Assert.assertThat(Arrays.stream(ArrayUtils.addAll(basicUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray())).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()));
     }
 
     @Test
     @WithMockUser
     public void create_requestUserDTOWithMissingEmailToBeCreated_returnBadRequest() throws Exception {
-        Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<>();
-        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
-        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
 
-        Set<AuthorityDTO> adminUserAuthoritiesDTOS = new HashSet<>();
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_GLOBAL"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_CREATE"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_GLOBAL"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_DELETE"));
-
-        Set<RoleDTO> userRoleDTOS = new HashSet<RoleDTO>();
-        userRoleDTOS.add(new RoleDTO().setName("BASIC_USER").setAuthorities(basicUserAuthorityDTOS));
-        userRoleDTOS.add(new RoleDTO().setName("ADMIN_USER").setAuthorities(adminUserAuthoritiesDTOS));
-
-        UserDTO adminUserDTO = new UserDTO().setRoles(userRoleDTOS).setFirstName("jane").setLastName("doe");
+        UserDTO adminUserDTO = new UserDTO().setRoles(mixedUserRolesDTOS).setFirstName("jane").setLastName("doe");
         String userDTOAsJsonString = new ObjectMapper().writeValueAsString(adminUserDTO);
 
         given(userService.save(any(User.class))).will(invocation -> {
@@ -236,23 +235,7 @@ public class UserController {
     @WithMockUser
     public void updateUserById_requestUserDTOToBeUpdated_returnUpdatedUserDTO() throws Exception {
 
-        Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<>();
-        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
-        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
-
-        Set<AuthorityDTO> adminUserAuthoritiesDTOS = new HashSet<>();
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_GLOBAL"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_CREATE"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_GLOBAL"));
-        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_DELETE"));
-
-        Set<RoleDTO> userRoleDTOS = new HashSet<RoleDTO>();
-        userRoleDTOS.add(new RoleDTO().setName("BASIC_USER").setAuthorities(basicUserAuthorityDTOS));
-        userRoleDTOS.add(new RoleDTO().setName("ADMIN_USER").setAuthorities(adminUserAuthoritiesDTOS));
-
-        UserDTO userDTO = new UserDTO().setRoles(userRoleDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+        UserDTO userDTO = new UserDTO().setRoles(mixedUserRolesDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
 
         String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTO);
 
@@ -272,8 +255,8 @@ public class UserController {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userDTO.getFirstName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userDTO.getLastName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userDTO.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(userRoleDTOS.stream().map(RoleDTO::getName).toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(basicUserAuthorityDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray()))));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(mixedUserRolesDTOS.stream().map(RoleDTO::getName).toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(basicUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray()))));
 
         ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
         ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
@@ -282,8 +265,8 @@ public class UserController {
         Assert.assertEquals(userDTO.getFirstName(), userCaptor.getValue().getFirstName());
         Assert.assertEquals(userDTO.getLastName(), userCaptor.getValue().getLastName());
         Assert.assertEquals(userDTO.getEmail(), userCaptor.getValue().getEmail());
-        Assert.assertThat(userRoleDTOS.stream().map(RoleDTO::getName).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getName).toArray()));
-        Assert.assertThat(Arrays.stream(ArrayUtils.addAll(basicUserAuthorityDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray())).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()));
+        Assert.assertThat(mixedUserRolesDTOS.stream().map(RoleDTO::getName).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getName).toArray()));
+        Assert.assertThat(Arrays.stream(ArrayUtils.addAll(basicUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray())).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()));
     }
 
     /*@Test
