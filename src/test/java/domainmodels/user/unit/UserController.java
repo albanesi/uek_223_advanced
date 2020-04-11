@@ -18,10 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -42,6 +39,11 @@ public class UserController {
     @Before
     public void setUp(){
 
+        //Business Objects (used in findById, findAll)
+        Set<Authority> userAuthorities = new HashSet<Authority>();
+        userAuthorities.add(new Authority().setName("USER_SEE_OWN"));
+        userAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
+
         Set<Authority> adminAuthorities = new HashSet<Authority>();
         adminAuthorities.add(new Authority().setName("USER_SEE_OWN"));
         adminAuthorities.add(new Authority().setName("USER_SEE_GLOBAL"));
@@ -50,23 +52,45 @@ public class UserController {
         adminAuthorities.add(new Authority().setName("USER_MODIFY_GLOBAL"));
         adminAuthorities.add(new Authority().setName("USER_DELETE"));
 
-        Set<Authority> userAuthorities = new HashSet<Authority>();
-        userAuthorities.add(new Authority().setName("USER_SEE_OWN"));
-        userAuthorities.add(new Authority().setName("USER_MODIFY_OWN"));
+        Set<Role> userRoles = new HashSet<Role>();
+        userRoles.add(new Role().setName("USER").setAuthorities(userAuthorities);
 
         Set<Role> adminRoles = new HashSet<Role>();
         adminRoles.add(new Role().setName("ADMIN").setAuthorities(adminAuthorities);
 
-        Set<Role> userRoles = new HashSet<Role>();
-        adminRoles.add(new Role().setName("USER").setAuthorities(userAuthorities);
-
-        User admin = new User().setRoles(adminRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
         User user = new User().setRoles(adminRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+        User admin = new User().setRoles(adminRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
 
+        //Data Transferable Objects (used in create, updateById, deleteById)
+        Set<AuthorityDTO> userAuthoritiesDTO = new HashSet<AuthorityDTO>();
+        userAuthoritiesDTO.add(new AuthorityDTO().setName("USER_SEE_OWN"));
+        userAuthoritiesDTO.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
+
+        Set<AuthorityDTO> adminAuthoritiesDTO = new HashSet<Authority>();
+        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_SEE_OWN"));
+        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_SEE_GLOBAL"));
+        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_CREATE"));
+        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
+        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_MODIFY_GLOBAL"));
+        adminAuthoritiesDTO.add(new AuthorityDTO().setName("USER_DELETE"));
+
+        Set<RoleDTO> userRolesDTO = new HashSet<RoleDTO>();
+        userRolesDTO.add(new RoleDTO().setName("USER").setAuthorities(userAuthoritiesDTO);
+
+        Set<RoleDTO> adminRolesDTO = new HashSet<RoleDTO>();
+        adminRolesDTO.add(new RoleDTO().setName("ADMIN").setAuthorities(adminAuthoritiesDTO);
+
+        User userDTO = new UserDTO().setRoles(adminRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
+        User adminDTO = new UserDTO().setRoles(adminRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
+
+        //Mocks
         given(userService.findById(anyString())).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0))) throw new NoSuchElementException();
             return (user);
         });
+
+        given(userService.findAll()).willReturn(Arrays.asList(user, admin));
+
 
     }
 
@@ -117,6 +141,26 @@ public class UserController {
         verify(userService, times(1)).findById(uuid.toString());
     }
 
+    @Test
+    @WithMockUser
+    public void create_requestsUser_returnsCreatedUser() throws Exception {
+        Set<RoleDTO> roles = new HashSet<>();
+        roles.add(new RoleDTO().setName("rolename"));
 
+        UserDTO userDTO = new UserDTO().setEmail("kevin@in.ch").setFirstName("kevin").setLastName("in")
+                .setCountry(new CountryDTO().setName("Germany")).setCity(new CityDTO().setName("Berlin").setPostalCode("9090")).setAddress("Ichweissned 60")
+                .setBirthDate("11.07.2000").setPhoneNumber("0930201020")
+                .setAvatarSrc("source").setRoles(roles);
+        String userAsJsonString = new ObjectMapper().writeValueAsString(userDTO);
+
+        mvc.perform(
+                MockMvcRequestBuilders.post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(userAsJsonString)
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value("myID"));
+
+        verify(userService, times(1)).save(any(User.class));
+    }
 
 }
