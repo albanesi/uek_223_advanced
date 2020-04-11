@@ -1,6 +1,6 @@
 package ch.course223.advanced.domainmodels.role;
 
-import ch.nyp.noa.config.generic.ExtendedService;
+import ch.course223.advanced.core.ExtendedService;
 
 import java.util.NoSuchElementException;
 

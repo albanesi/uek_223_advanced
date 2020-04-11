@@ -1,9 +1,8 @@
 package ch.course223.advanced.domainmodels.role;
 
-import ch.nyp.noa.config.error.BadRequestException;
-import ch.nyp.noa.config.generic.ExtendedServiceImpl;
-import ch.nyp.noa.webContext.domain.authority.AuthorityService;
-import org.slf4j.Logger;
+import ch.course223.advanced.core.ExtendedServiceImpl;
+import ch.course223.advanced.domainmodels.authority.AuthorityService;
+import ch.course223.advanced.error.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,8 +14,8 @@ public class RoleServiceImpl extends ExtendedServiceImpl<Role> implements RoleSe
 	private AuthorityService authorityService;
 
 	@Autowired
-	public RoleServiceImpl(RoleRepository repository, Logger logger, AuthorityService authorityService) {
-		super(repository, logger);
+	public RoleServiceImpl(RoleRepository repository, AuthorityService authorityService) {
+		super(repository);
 		this.authorityService = authorityService;
 	}
 
@@ -34,13 +33,10 @@ public class RoleServiceImpl extends ExtendedServiceImpl<Role> implements RoleSe
 	public Role updateById(String id, Role entity) throws NoSuchElementException, BadRequestException {
 		super.checkUpdatedEntityId(id, entity);
 
-		logger.debug("Updating Role with ID '{}'", id);
-
 		Role oldRole = findById(id);
 		entity.setId(oldRole.getId());
 
 		entity.setAuthorities(oldRole.getAuthorities());
-		logger.debug("Set updated Roles Authorities to its old Authorities");
 
 		return repository.save(entity);
 	}
@@ -59,7 +55,6 @@ public class RoleServiceImpl extends ExtendedServiceImpl<Role> implements RoleSe
 		Role role = findById(roleId);
 
 		role.getAuthorities().add(authorityService.findById(authorityId));
-		logger.debug("Added Authority with ID '{}' to Role with ID '{}'", authorityId, roleId);
 
 		return repository.save(role);
 	}
@@ -69,7 +64,6 @@ public class RoleServiceImpl extends ExtendedServiceImpl<Role> implements RoleSe
 		Role role = findById(roleId);
 
 		role.getAuthorities().remove(authorityService.findById(authorityId));
-		logger.debug("Removed Authority with ID '{}' from Role with ID '{}'", authorityId, roleId);
 
 		return repository.save(role);
 	}

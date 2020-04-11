@@ -11,8 +11,8 @@ import java.util.NoSuchElementException;
 class AuthorityServiceImpl extends ExtendedServiceImpl<Authority> implements AuthorityService {
 
 	@Autowired
-	public AuthorityServiceImpl(AuthorityRepository repository, Logger logger) {
-		super(repository, logger);
+	public AuthorityServiceImpl(AuthorityRepository repository) {
+		super(repository);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package ch.course223.advanced.core;
 
 import ch.course223.advanced.error.BadRequestException;
-import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -11,11 +10,9 @@ public abstract class ExtendedServiceImpl<T extends ExtendedEntity> implements E
 
 	protected ExtendedJpaRepository<T> repository;
 
-	protected Logger logger;
 
-	public ExtendedServiceImpl(ExtendedJpaRepository<T> repository, Logger logger) {
+	public ExtendedServiceImpl(ExtendedJpaRepository<T> repository) {
 		this.repository = repository;
-		this.logger = logger;
 	}
 
 	@Override
@@ -68,8 +65,6 @@ public abstract class ExtendedServiceImpl<T extends ExtendedEntity> implements E
 	}
 
 	protected void checkUpdatedEntityId(String id, T entity) throws BadRequestException {
-		logger.debug("id: {}", id);
-		logger.debug("entity: {}", entity);
 
 		if(entity.getId() != null) {
 			if(!id.equals(entity.getId())) {

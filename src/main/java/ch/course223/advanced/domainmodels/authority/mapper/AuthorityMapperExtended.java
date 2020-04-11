@@ -1,8 +1,8 @@
 package ch.course223.advanced.domainmodels.authority.mapper;
 
-import ch.nyp.noa.config.generic.ExtendedDTOMapper;
-import ch.nyp.noa.webContext.domain.authority.Authority;
-import ch.nyp.noa.webContext.domain.authority.AuthorityDTO;
+import ch.course223.advanced.core.ExtendedDTOMapper;
+import ch.course223.advanced.domainmodels.authority.Authority;
+import ch.course223.advanced.domainmodels.authority.AuthorityDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 

@@ -1,8 +1,8 @@
 package ch.course223.advanced.domainmodels.role.mapper;
 
-import ch.nyp.noa.config.generic.ExtendedDTOMapper;
-import ch.nyp.noa.webContext.domain.role.Role;
-import ch.nyp.noa.webContext.domain.role.RoleDTO;
+import ch.course223.advanced.core.ExtendedDTOMapper;
+import ch.course223.advanced.domainmodels.role.Role;
+import ch.course223.advanced.domainmodels.role.RoleDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
