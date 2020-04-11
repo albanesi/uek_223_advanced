@@ -1,7 +1,6 @@
 package ch.course223.advanced.domainmodels.authority;
 
 import ch.course223.advanced.core.ExtendedServiceImpl;
-import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
