@@ -102,6 +102,19 @@ public class UserController {
 
     @Test
     @WithMockUser
+    public void findById_requestUserByWrongId_returnNotFound() throws Exception {
+        mvc.perform(
+                MockMvcRequestBuilders.get("/users/{id}","non-existent")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect((MockMvcResultMatchers.status().isNotFound()));
+
+        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
+        verify(userService, times(1)).findById(stringCaptor.capture());
+        Assert.assertEquals("non-existent",stringCaptor.getValue());
+    }
+
+    @Test
+    @WithMockUser
     public void findAll_requestAllUsers_returnsAllUsers() throws Exception {
 
         Set<Authority> basicUserAuthorities = new HashSet<Authority>();
@@ -144,7 +157,7 @@ public class UserController {
 
     @Test
     @WithMockUser
-    public void create_deliverUserDTOToCreate_returnCreatedUserDTO() throws Exception {
+    public void create_requestUserDTOToBeCreated_returnCreatedUserDTO() throws Exception {
 
         given(userService.save(any(User.class))).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
@@ -152,7 +165,6 @@ public class UserController {
             User userDTO = invocation.getArgument(0);
             return userDTO.setId(uuid.toString());
         });
-
 
         Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
@@ -191,7 +203,47 @@ public class UserController {
 
     @Test
     @WithMockUser
-    public void updateUserById_deliverUserDTOToUpdate_returnUpdatedUserDTO() throws Exception {
+    public void create_requestUserDTOWithMissingEmailToBeCreated_returnBadRequest() throws Exception {
+        Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<>();
+        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
+        basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
+
+        Set<AuthorityDTO> adminUserAuthoritiesDTOS = new HashSet<>();
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_SEE_GLOBAL"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_CREATE"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_OWN"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_MODIFY_GLOBAL"));
+        adminUserAuthoritiesDTOS.add(new AuthorityDTO().setName("USER_DELETE"));
+
+        Set<RoleDTO> userRoleDTOS = new HashSet<RoleDTO>();
+        userRoleDTOS.add(new RoleDTO().setName("BASIC_USER").setAuthorities(basicUserAuthorityDTOS));
+        userRoleDTOS.add(new RoleDTO().setName("ADMIN_USER").setAuthorities(adminUserAuthoritiesDTOS));
+
+        UserDTO adminUserDTO = new UserDTO().setRoles(userRoleDTOS).setFirstName("jane").setLastName("doe");
+        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(adminUserDTO);
+
+        given(userService.save(any(User.class))).will(invocation -> {
+            if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
+            UUID uuid = UUID.randomUUID();
+            User mirrorOfGivenDTO = invocation.getArgument(0);
+            return mirrorOfGivenDTO.setId(uuid.toString());
+        });
+
+        mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/users")
+                        .content(userDTOAsJsonString)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+        verify(userService, never()).save(any(User.class));
+    }
+
+    @Test
+    @WithMockUser
+    public void updateUserById_requestUserDTOToBeUpdated_returnUpdatedUserDTO() throws Exception {
 
         Set<AuthorityDTO> basicUserAuthorityDTOS = new HashSet<AuthorityDTO>();
         basicUserAuthorityDTOS.add(new AuthorityDTO().setName("USER_SEE_OWN"));
@@ -237,6 +289,23 @@ public class UserController {
 
     @Test
     @WithMockUser
+    public void updateUserById_requestUserDTOWithFalseEmail_returnBadRequest() throws Exception {
+
+        mvc.perform(
+                MockMvcRequestBuilders
+                        .post("/users")
+                        .content(userDTOAsJsonString)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+
+        verify(userService, never()).updateById(anyString(), any(User.class));
+
+    }
+
+
+    @Test
+    @WithMockUser
     public void deleteUserById_requestADeletionOfUserById_returnAppropriateState() throws Exception {
 
         given(userService.deleteById(anyString())).will(invocation -> {
@@ -254,7 +323,7 @@ public class UserController {
         ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
         verify(userService, times(1)).deleteById(stringCaptor.capture());
         Assert.assertEquals(uuid.toString(),stringCaptor.getValue());
-
+A
     }
 
 }

@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -24,6 +25,7 @@ public class User extends ExtendedEntity {
     @Column(name = "password")
     private String password;
 
+    @NotNull
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
