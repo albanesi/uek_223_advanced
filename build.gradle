@@ -47,6 +47,9 @@ dependencies {
 	//JSONWebtoken
 	compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 
+	//Flyway
+	compile group: 'org.flywaydb', name: 'flyway-core', version: '6.3.3'
+
 
 }
 
