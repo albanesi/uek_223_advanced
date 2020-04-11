@@ -21,9 +21,6 @@ public class User extends ExtendedEntity {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "user_name")
-    private String userName;
-
     @Column(name = "password")
     private String password;
 
@@ -71,14 +68,6 @@ public class User extends ExtendedEntity {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getPassword() {
