@@ -54,7 +54,6 @@ public class UserRepositoryTest {
 
     @Test
     public void findById_requestUserById_returnsUser() {
-
         Optional<User> userFromDB = userRepository.findById(userIdFromDBUser1);
 
         Assertions.assertThat(userFromDB).isEqualTo(Optional.ofNullable(userToBeTestedAgainst1));
@@ -65,12 +64,10 @@ public class UserRepositoryTest {
         Assertions.assertThat(userFromDB.get().getEnabled()).isEqualTo(userToBeTestedAgainst1.getEnabled());
         Assertions.assertThat(userFromDB.get().getPassword()).isEqualTo(userToBeTestedAgainst1.getPassword());
         Assertions.assertThat(userFromDB.get().getRoles()).isEqualTo(userToBeTestedAgainst1.getRoles());
-
     }
 
     @Test
     public void findAll_requestAllUsers_returnsAllUsers() {
-
         List<User> usersFromDB = userRepository.findAll();
 
         Assertions.assertThat(usersFromDB.stream().map(User::getId).toArray()).containsExactlyInAnyOrder(listOfIdsFromDB.toArray());
@@ -81,12 +78,10 @@ public class UserRepositoryTest {
         Assertions.assertThat(usersFromDB.stream().map(User::getPassword).toArray()).isEqualTo(listOfUsersToBeTestedAgainst.stream().map(User::getPassword).toArray());
         Assertions.assertThat(usersFromDB.stream().map(User::getRoles).toArray()).containsExactlyInAnyOrder(listOfUsersToBeTestedAgainst.stream().map(User::getRoles).toArray());
         Assertions.assertThat(usersFromDB.stream().map(User::getRoles).flatMap(Collection::stream).map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()).containsExactlyInAnyOrder(listOfUsersToBeTestedAgainst.stream().map(User::getRoles).flatMap(Collection::stream).map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray());
-
     }
 
     @Test
     public void create_deliverUserToCreate_returnCreatedUser(){
-
         User savedUser = userRepository.save(newUserToBeSaved);
 
         Assertions.assertThat(testEntityManager.find(User.class, savedUser.getId())).isEqualTo(newUserToBeSaved);
@@ -97,12 +92,10 @@ public class UserRepositoryTest {
         Assertions.assertThat(savedUser.getPassword()).isEqualTo(newUserToBeSaved.getPassword());
         Assertions.assertThat(savedUser.getRoles().stream().map(Role::getName).toArray()).containsExactlyInAnyOrder(newUserToBeSaved.getRoles().stream().map(Role::getName).toArray());
         Assertions.assertThat(savedUser.getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()).containsExactlyInAnyOrder(newUserToBeSaved.getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray());
-
     }
 
     @Test
     public void updateUserById_requestUserToBeUpdated_returnUpdatedUser(){
-
         User updatedUser = userRepository.save(userToBeTestedAgainst1);
 
         Assertions.assertThat(testEntityManager.find(User.class, updatedUser.getId())).isEqualTo(updatedUser);
@@ -113,18 +106,15 @@ public class UserRepositoryTest {
         Assertions.assertThat(updatedUser.getPassword()).isEqualTo(userToBeTestedAgainst1.getPassword());
         Assertions.assertThat(updatedUser.getRoles().stream().map(Role::getName).toArray()).containsExactlyInAnyOrder(userToBeTestedAgainst1.getRoles().stream().map(Role::getName).toArray());
         Assertions.assertThat(updatedUser.getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()).containsExactlyInAnyOrder(userToBeTestedAgainst1.getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray());
-
     }
 
     @Test
     public void deleteUserById_requestADeletionOfUserById_returnAppropriateState(){
-
         String userIdFromDB = testEntityManager.persistAndGetId(userToBeTestedAgainst1, String.class);
 
         userRepository.deleteById(userIdFromDB);
 
         Assertions.assertThat(userRepository.findById(userIdFromDB)).isEmpty();
-
     }
 
 }
