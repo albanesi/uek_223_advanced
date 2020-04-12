@@ -44,7 +44,7 @@ public class UserServiceImplTest {
     @BeforeClass
     public static void setUp(){
         UUID uuidToBeTestedAgainst = UUID.randomUUID();
-        Set<Authority> authoritiesToBeTestedAgainst = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_SEE_GLOBAL"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY_OWN"), new Authority().setName("USER_MODIFY_GLOBAL"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
+        Set<Authority> authoritiesToBeTestedAgainst = Stream.of(new Authority().setName("USER_SEE"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
         Set<Role> rolesToBeTestedAgainst = Stream.of(new Role().setName("BASIC_USER").setAuthorities(authoritiesToBeTestedAgainst)).collect(Collectors.toSet());
         userToBeTestedAgainst = new User(uuidToBeTestedAgainst.toString()).setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(UUID.randomUUID().toString())).setRoles(rolesToBeTestedAgainst);
         listOfUsersToBeTestedAgainst = Arrays.asList(userToBeTestedAgainst, userToBeTestedAgainst, userToBeTestedAgainst);

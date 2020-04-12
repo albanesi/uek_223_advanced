@@ -60,12 +60,12 @@ public class UserControllerTest {
     @BeforeClass
     public static void setUp(){
         UUID uuidToBeTestedAgainst = UUID.randomUUID();
-        Set<Authority> authoritiesToBeTestedAgainst = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_SEE_GLOBAL"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY_OWN"), new Authority().setName("USER_MODIFY_GLOBAL"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
+        Set<Authority> authoritiesToBeTestedAgainst = Stream.of(new Authority().setName("USER_SEE"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
         Set<Role> rolesToBeTestedAgainst = Stream.of(new Role().setName("BASIC_USER").setAuthorities(authoritiesToBeTestedAgainst)).collect(Collectors.toSet());
         userToBeTestedAgainst = new User(uuidToBeTestedAgainst.toString()).setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(uuidToBeTestedAgainst.randomUUID().toString())).setRoles(rolesToBeTestedAgainst);
         listOfUsersToBeTestedAgainst = Arrays.asList(userToBeTestedAgainst, userToBeTestedAgainst);
 
-        Set<AuthorityDTO> authorityDTOSToBeTestedAgainst = Stream.of(new AuthorityDTO().setName("USER_SEE_OWN"), new AuthorityDTO().setName("USER_SEE_GLOBAL"), new AuthorityDTO().setName("USER_CREATE"), new AuthorityDTO().setName("USER_MODIFY_OWN"), new AuthorityDTO().setName("USER_MODIFY_GLOBAL"), new AuthorityDTO().setName("USER_DELETE")).collect(Collectors.toSet());
+        Set<AuthorityDTO> authorityDTOSToBeTestedAgainst = Stream.of(new AuthorityDTO().setName("USER_SEE"), new AuthorityDTO().setName("USER_CREATE"), new AuthorityDTO().setName("USER_MODIFY"), new AuthorityDTO().setName("USER_DELETE")).collect(Collectors.toSet());
         Set<RoleDTO> roleDTOSToBeTestedAgainst = Stream.of(new RoleDTO().setName("BASIC_USER").setAuthorities(authorityDTOSToBeTestedAgainst)).collect(Collectors.toSet());
         userDTOToBeTestedAgainst = new UserDTO(uuidToBeTestedAgainst.toString()).setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch").setRoles(roleDTOSToBeTestedAgainst);
         listOfUserDTOSToBeTestedAgainst = Arrays.asList(userDTOToBeTestedAgainst, userDTOToBeTestedAgainst);
