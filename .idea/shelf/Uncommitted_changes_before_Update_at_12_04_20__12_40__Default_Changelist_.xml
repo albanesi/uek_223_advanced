@@ -1,0 +1,44 @@
+<changelist name="Uncommitted_changes_before_Update_at_12_04_20,_12_40_[Default_Changelist]" date="1586688006303" recycled="false" toDelete="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_04_20,_12_40_[Default_Changelist]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 12.04.20, 12:40 [Default Changelist]" />
+  <binary>
+    <option name="BEFORE_PATH" value="build/test-results/test/binary/output.bin" />
+    <option name="AFTER_PATH" value="build/test-results/test/binary/output.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_04_20,_12_40_[Default_Changelist]/output.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/test/ch/course223/advanced/domainmodels/user/unit/UserRepository.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/test/ch/course223/advanced/domainmodels/user/unit/UserServiceImpl.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/test-results/test/binary/output.bin.idx" />
+    <option name="AFTER_PATH" value="build/test-results/test/binary/output.bin.idx" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_04_20,_12_40_[Default_Changelist]/output.bin.idx" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/main/ch/course223/advanced/domainmodels/user/User.class" />
+    <option name="AFTER_PATH" value="build/classes/java/main/ch/course223/advanced/domainmodels/user/User.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_04_20,_12_40_[Default_Changelist]/User.class" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/test-results/test/binary/results.bin" />
+    <option name="AFTER_PATH" value="build/test-results/test/binary/results.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_04_20,_12_40_[Default_Changelist]/results.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value=".gradle/6.3/fileHashes/resourceHashesCache.bin" />
+    <option name="AFTER_PATH" value=".gradle/6.3/fileHashes/resourceHashesCache.bin" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_04_20,_12_40_[Default_Changelist]/resourceHashesCache.bin" />
+  </binary>
+  <binary>
+    <option name="BEFORE_PATH" value="build/classes/java/test/ch/course223/advanced/domainmodels/user/unit/UserController.class" />
+    <option name="AFTER_PATH" />
+    <option name="SHELVED_PATH" />
+  </binary>
+</changelist>

@@ -1,0 +1,344 @@
+Index: src/test/java/ch/course223/advanced/domainmodels/user/unit/UserServiceImplTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ch.course223.advanced.domainmodels.user.unit;\n\nimport ch.course223.advanced.domainmodels.authority.Authority;\nimport ch.course223.advanced.domainmodels.role.Role;\nimport ch.course223.advanced.domainmodels.user.User;\nimport ch.course223.advanced.domainmodels.user.UserRepository;\nimport ch.course223.advanced.domainmodels.user.UserServiceImpl;\nimport org.assertj.core.api.Assertions;\nimport org.junit.BeforeClass;\nimport org.junit.Test;\nimport org.junit.runner.RunWith;\nimport org.mockito.InjectMocks;\nimport org.mockito.Mock;\nimport org.mockito.Mockito;\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\nimport org.springframework.test.context.TestPropertySource;\nimport org.springframework.test.context.junit4.SpringRunner;\n\nimport java.util.Arrays;\nimport java.util.List;\nimport java.util.Optional;\nimport java.util.Set;\nimport java.util.stream.Collectors;\nimport java.util.stream.Stream;\n\nimport static org.mockito.Mockito.times;\nimport static org.mockito.Mockito.verify;\n\n@RunWith(SpringRunner.class)\n@TestPropertySource(\"classpath:application-test.properties\")\npublic class UserServiceImplTest {\n\n    @InjectMocks\n    private UserServiceImpl userService;\n\n    @Mock\n    private BCryptPasswordEncoder bCryptPasswordEncoder;\n\n    @Mock\n    private UserRepository userRepository;\n\n    private static User user1;\n    private static User user2;\n\n    private static Set<Authority> basicUserAuthorities;\n    private static Set<Authority> adminUserAuthorities;\n\n    private static Set<Role> basicUserRoles;\n    private static Set<Role> adminUserRoles;\n    private static Set<Role> mixedUserRoles;\n\n    @BeforeClass\n    public static void setUp(){\n\n        basicUserAuthorities = Stream.of(new Authority().setName(\"USER_SEE_OWN\"), new Authority().setName(\"USER_MODIFY_OWN\")).collect(Collectors.toSet());\n        adminUserAuthorities = Stream.of(new Authority().setName(\"USER_SEE_OWN\"), new Authority().setName(\"USER_SEE_GLOBAL\"), new Authority().setName(\"USER_CREATE\"), new Authority().setName(\"USER_MODIFY_OWN\"), new Authority().setName(\"USER_MODIFY_GLOBAL\"), new Authority().setName(\"USER_DELETE\")).collect(Collectors.toSet());\n\n        basicUserRoles = Stream.of(new Role().setName(\"BASIC_USER\").setAuthorities(basicUserAuthorities)).collect(Collectors.toSet());\n        adminUserRoles = Stream.of(new Role().setName(\"ADMIN_USER\").setAuthorities(adminUserAuthorities)).collect(Collectors.toSet());\n        mixedUserRoles = Stream.of(new Role().setName(\"BASIC_USER\").setAuthorities(basicUserAuthorities), new Role().setName(\"ADMIN_USER\").setAuthorities(adminUserAuthorities)).collect(Collectors.toSet());\n\n\n\n        user1 = new User().setFirstName(\"John\").setLastName(\"Doe\").setEmail(\"john.doe@noseryoung.ch\").setRoles(mixedUserRoles).setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(\"12345\"));\n        user1.setId(\"86330e33-8a0a-4043-b9bf-7766c93ba078\");\n        user2 = new User().setFirstName(\"Jane\").setLastName(\"Doe\").setEmail(\"jane.doe@noseryoung.ch\").setRoles(mixedUserRoles).setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(\"12345\"));\n        user2.setId(\"ebbf2382-60c8-4358-9f77-f0dc250614c8\");\n    }\n\n    @Test\n    public void findById_requestUserById_returnsUser() {\n\n        Mockito.when(userRepository.findById(user1.getId())).thenReturn(Optional.ofNullable(user1));\n\n        User foundUser = userService.findById(user1.getId());\n\n        Assertions.assertThat(foundUser.getFirstName()).isEqualTo(user1.getFirstName());\n        Assertions.assertThat(foundUser.getLastName()).isEqualTo(user1.getLastName());\n        Assertions.assertThat(foundUser.getEmail()).isEqualTo(user1.getEmail());\n        Assertions.assertThat(foundUser.getRoles()).isEqualTo(user1.getRoles());\n        Assertions.assertThat(foundUser.getPassword()).isEqualTo(user1.getPassword());\n\n        verify(userRepository, times(1)).findById(user1.getId());\n\n    }\n\n    @Test\n    public void findAll_requestAllUsers_returnsAllUsers() {\n\n        List<User> usersToReturn = Arrays.asList(user1, user2);\n\n        Mockito.when(userRepository.findAll()).thenReturn(usersToReturn);\n\n        List<User> users = userService.findAll();\n\n        Assertions.assertThat(users.size()).isEqualTo(usersToReturn.size());\n        Assertions.assertThat(users.stream().map(User::getFirstName).toArray()).isEqualTo(usersToReturn.stream().map(User::getFirstName).toArray());\n        Assertions.assertThat(users.stream().map(User::getLastName).toArray()).isEqualTo(usersToReturn.stream().map(User::getLastName).toArray());\n        Assertions.assertThat(users.stream().map(User::getEmail).toArray()).isEqualTo(usersToReturn.stream().map(User::getEmail).toArray());\n        Assertions.assertThat(users.stream().map(User::getEnabled).toArray()).isEqualTo(usersToReturn.stream().map(User::getEnabled).toArray());\n\n        verify(userRepository, times(1)).findAll();\n\n    }\n\n    @Test\n    public void create_deliverUserToCreate_returnCreatedUser(){\n\n        Mockito.when(userRepository.save(user1)).thenReturn(user1);\n\n        User savedUser = userService.save(user1);\n\n        Assertions.assertThat(savedUser).isEqualTo(user1);\n        Assertions.assertThat(savedUser.getFirstName()).isEqualTo(user1.getFirstName());\n        Assertions.assertThat(savedUser.getLastName()).isEqualTo(user1.getLastName());\n        Assertions.assertThat(savedUser.getEmail()).isEqualTo(user1.getEmail());\n        Assertions.assertThat(savedUser.getRoles()).isEqualTo(user1.getRoles());\n\n        verify(userRepository, times(1)).save(user1);\n    }\n\n    @Test\n    public void updateUserById_requestUserToBeUpdated_returnUpdatedUser(){\n\n        User userToUpdate = new User().setFirstName(\"Jane\").setLastName(\"Herbert\").setEmail(\"jane.herbert@noseryoung.ch\").setRoles(mixedUserRoles).setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(\"newPassword\"));\n\n        Mockito.when(userRepository.existsById(user2.getId())).thenReturn(true);\n        Mockito.when(userRepository.save(userToUpdate)).thenReturn(userToUpdate);\n\n        User updatedUser = userService.updateById(user2.getId(), userToUpdate);\n\n        Assertions.assertThat(updatedUser.getFirstName()).isEqualTo(userToUpdate.getFirstName());\n        Assertions.assertThat(updatedUser.getLastName()).isEqualTo(userToUpdate.getLastName());\n        Assertions.assertThat(updatedUser.getEmail()).isEqualTo(userToUpdate.getEmail());\n        Assertions.assertThat(updatedUser.getPassword()).isEqualTo(userToUpdate.getPassword());\n        Assertions.assertThat(updatedUser.getPassword()).isEqualTo(userToUpdate.getPassword());\n\n    }\n\n    @Test\n    public void deleteUserById_requestADeletionOfUserById_returnAppropriateState(){\n\n        Mockito.when(userRepository.existsById(user1.getId())).thenReturn(true);\n        Mockito.doNothing().when(userRepository).deleteById(user1.getId());\n\n        Assertions.assertThat(userService.deleteById(user1.getId())).isNull();\n\n    }\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/test/java/ch/course223/advanced/domainmodels/user/unit/UserServiceImplTest.java	(revision 50a84ff1e6532f7fb8e792748b247a68a26b0013)
++++ src/test/java/ch/course223/advanced/domainmodels/user/unit/UserServiceImplTest.java	(date 1586687964888)
+@@ -60,7 +60,6 @@
+         mixedUserRoles = Stream.of(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities), new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities)).collect(Collectors.toSet());
+ 
+ 
+-
+         user1 = new User().setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch").setRoles(mixedUserRoles).setEnabled(true).setPassword(new BCryptPasswordEncoder().encode("12345"));
+         user1.setId("86330e33-8a0a-4043-b9bf-7766c93ba078");
+         user2 = new User().setFirstName("Jane").setLastName("Doe").setEmail("jane.doe@noseryoung.ch").setRoles(mixedUserRoles).setEnabled(true).setPassword(new BCryptPasswordEncoder().encode("12345"));
+Index: build/reports/tests/test/packages/ch.course223.advanced.domainmodels.user.unit.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><!DOCTYPE html>\n<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"/>\n<meta http-equiv=\"x-ua-compatible\" content=\"IE=edge\"/>\n<title>Test results - Package ch.course223.advanced.domainmodels.user.unit</title>\n<link href=\"../css/base-style.css\" rel=\"stylesheet\" type=\"text/css\"/>\n<link href=\"../css/style.css\" rel=\"stylesheet\" type=\"text/css\"/>\n<script src=\"../js/report.js\" type=\"text/javascript\"></script>\n</head>\n<body>\n<div id=\"content\">\n<h1>Package ch.course223.advanced.domainmodels.user.unit</h1>\n<div class=\"breadcrumbs\">\n<a href=\"../index.html\">all</a> &gt; ch.course223.advanced.domainmodels.user.unit</div>\n<div id=\"summary\">\n<table>\n<tr>\n<td>\n<div class=\"summaryGroup\">\n<table>\n<tr>\n<td>\n<div class=\"infoBox\" id=\"tests\">\n<div class=\"counter\">6</div>\n<p>tests</p>\n</div>\n</td>\n<td>\n<div class=\"infoBox\" id=\"failures\">\n<div class=\"counter\">0</div>\n<p>failures</p>\n</div>\n</td>\n<td>\n<div class=\"infoBox\" id=\"ignored\">\n<div class=\"counter\">0</div>\n<p>ignored</p>\n</div>\n</td>\n<td>\n<div class=\"infoBox\" id=\"duration\">\n<div class=\"counter\">0.756s</div>\n<p>duration</p>\n</div>\n</td>\n</tr>\n</table>\n</div>\n</td>\n<td>\n<div class=\"infoBox success\" id=\"successRate\">\n<div class=\"percent\">100%</div>\n<p>successful</p>\n</div>\n</td>\n</tr>\n</table>\n</div>\n<div id=\"tabs\">\n<ul class=\"tabLinks\">\n<li>\n<a href=\"#tab0\">Classes</a>\n</li>\n</ul>\n<div id=\"tab0\" class=\"tab\">\n<h2>Classes</h2>\n<table>\n<thread>\n<tr>\n<th>Class</th>\n<th>Tests</th>\n<th>Failures</th>\n<th>Ignored</th>\n<th>Duration</th>\n<th>Success rate</th>\n</tr>\n</thread>\n<tr>\n<td class=\"success\">\n<a href=\"../classes/ch.course223.advanced.domainmodels.user.unit.UserController.html\">UserController</a>\n</td>\n<td>6</td>\n<td>0</td>\n<td>0</td>\n<td>0.756s</td>\n<td class=\"success\">100%</td>\n</tr>\n</table>\n</div>\n</div>\n<div id=\"footer\">\n<p>\n<div>\n<label class=\"hidden\" id=\"label-for-line-wrapping-toggle\" for=\"line-wrapping-toggle\">Wrap lines\n<input id=\"line-wrapping-toggle\" type=\"checkbox\" autocomplete=\"off\"/>\n</label>\n</div>Generated by \n<a href=\"http://www.gradle.org\">Gradle 6.3</a> at Apr 12, 2020, 1:12:17 AM</p>\n</div>\n</div>\n</body>\n</html>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- build/reports/tests/test/packages/ch.course223.advanced.domainmodels.user.unit.html	(revision 50a84ff1e6532f7fb8e792748b247a68a26b0013)
++++ build/reports/tests/test/packages/ch.course223.advanced.domainmodels.user.unit.html	(date 1586685645868)
+@@ -22,13 +22,13 @@
+ <tr>
+ <td>
+ <div class="infoBox" id="tests">
+-<div class="counter">6</div>
++<div class="counter">1</div>
+ <p>tests</p>
+ </div>
+ </td>
+ <td>
+ <div class="infoBox" id="failures">
+-<div class="counter">0</div>
++<div class="counter">1</div>
+ <p>failures</p>
+ </div>
+ </td>
+@@ -40,7 +40,7 @@
+ </td>
+ <td>
+ <div class="infoBox" id="duration">
+-<div class="counter">0.756s</div>
++<div class="counter">0.249s</div>
+ <p>duration</p>
+ </div>
+ </td>
+@@ -49,8 +49,8 @@
+ </div>
+ </td>
+ <td>
+-<div class="infoBox success" id="successRate">
+-<div class="percent">100%</div>
++<div class="infoBox failures" id="successRate">
++<div class="percent">0%</div>
+ <p>successful</p>
+ </div>
+ </td>
+@@ -60,10 +60,22 @@
+ <div id="tabs">
+ <ul class="tabLinks">
+ <li>
+-<a href="#tab0">Classes</a>
++<a href="#tab0">Failed tests</a>
++</li>
++<li>
++<a href="#tab1">Classes</a>
+ </li>
+ </ul>
+ <div id="tab0" class="tab">
++<h2>Failed tests</h2>
++<ul class="linkList">
++<li>
++<a href="../classes/ch.course223.advanced.domainmodels.user.unit.UserRepositoryTest.html">UserRepositoryTest</a>.
++<a href="../classes/ch.course223.advanced.domainmodels.user.unit.UserRepositoryTest.html#findById_requestUserById_returnsUser">findById_requestUserById_returnsUser</a>
++</li>
++</ul>
++</div>
++<div id="tab1" class="tab">
+ <h2>Classes</h2>
+ <table>
+ <thread>
+@@ -77,14 +89,14 @@
+ </tr>
+ </thread>
+ <tr>
+-<td class="success">
+-<a href="../classes/ch.course223.advanced.domainmodels.user.unit.UserController.html">UserController</a>
++<td class="failures">
++<a href="../classes/ch.course223.advanced.domainmodels.user.unit.UserRepositoryTest.html">UserRepositoryTest</a>
+ </td>
+-<td>6</td>
++<td>1</td>
++<td>1</td>
+ <td>0</td>
+-<td>0</td>
+-<td>0.756s</td>
+-<td class="success">100%</td>
++<td>0.249s</td>
++<td class="failures">0%</td>
+ </tr>
+ </table>
+ </div>
+@@ -96,7 +108,7 @@
+ <input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+ </label>
+ </div>Generated by 
+-<a href="http://www.gradle.org">Gradle 6.3</a> at Apr 12, 2020, 1:12:17 AM</p>
++<a href="http://www.gradle.org">Gradle 6.3</a> at Apr 12, 2020, 12:00:45 PM</p>
+ </div>
+ </div>
+ </body>
+Index: build/reports/tests/test/classes/ch.course223.advanced.domainmodels.user.unit.UserController.html
+===================================================================
+--- build/reports/tests/test/classes/ch.course223.advanced.domainmodels.user.unit.UserController.html	(revision 50a84ff1e6532f7fb8e792748b247a68a26b0013)
++++ build/reports/tests/test/classes/ch.course223.advanced.domainmodels.user.unit.UserController.html	(revision 50a84ff1e6532f7fb8e792748b247a68a26b0013)
+@@ -1,168 +0,0 @@
+-<!DOCTYPE html>
+-<html>
+-<head>
+-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+-<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+-<title>Test results - UserController</title>
+-<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+-<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+-<script src="../js/report.js" type="text/javascript"></script>
+-</head>
+-<body>
+-<div id="content">
+-<h1>UserController</h1>
+-<div class="breadcrumbs">
+-<a href="../index.html">all</a> &gt; 
+-<a href="../packages/ch.course223.advanced.domainmodels.user.unit.html">ch.course223.advanced.domainmodels.user.unit</a> &gt; UserController</div>
+-<div id="summary">
+-<table>
+-<tr>
+-<td>
+-<div class="summaryGroup">
+-<table>
+-<tr>
+-<td>
+-<div class="infoBox" id="tests">
+-<div class="counter">6</div>
+-<p>tests</p>
+-</div>
+-</td>
+-<td>
+-<div class="infoBox" id="failures">
+-<div class="counter">0</div>
+-<p>failures</p>
+-</div>
+-</td>
+-<td>
+-<div class="infoBox" id="ignored">
+-<div class="counter">0</div>
+-<p>ignored</p>
+-</div>
+-</td>
+-<td>
+-<div class="infoBox" id="duration">
+-<div class="counter">0.756s</div>
+-<p>duration</p>
+-</div>
+-</td>
+-</tr>
+-</table>
+-</div>
+-</td>
+-<td>
+-<div class="infoBox success" id="successRate">
+-<div class="percent">100%</div>
+-<p>successful</p>
+-</div>
+-</td>
+-</tr>
+-</table>
+-</div>
+-<div id="tabs">
+-<ul class="tabLinks">
+-<li>
+-<a href="#tab0">Tests</a>
+-</li>
+-<li>
+-<a href="#tab1">Standard output</a>
+-</li>
+-</ul>
+-<div id="tab0" class="tab">
+-<h2>Tests</h2>
+-<table>
+-<thead>
+-<tr>
+-<th>Test</th>
+-<th>Duration</th>
+-<th>Result</th>
+-</tr>
+-</thead>
+-<tr>
+-<td class="success">create_deliverUserDTOToCreate_returnCreatedUserDTO</td>
+-<td class="success">0.066s</td>
+-<td class="success">passed</td>
+-</tr>
+-<tr>
+-<td class="success">create_requestUserDTOWithMissingEmailToBeCreated_returnBadRequest</td>
+-<td class="success">0.067s</td>
+-<td class="success">passed</td>
+-</tr>
+-<tr>
+-<td class="success">deleteUserById_requestADeletionOfUserById_returnAppropriateState</td>
+-<td class="success">0.018s</td>
+-<td class="success">passed</td>
+-</tr>
+-<tr>
+-<td class="success">findAll_requestAllUsers_returnsAllUsers</td>
+-<td class="success">0.319s</td>
+-<td class="success">passed</td>
+-</tr>
+-<tr>
+-<td class="success">findById_requestUserById_returnsUser</td>
+-<td class="success">0.030s</td>
+-<td class="success">passed</td>
+-</tr>
+-<tr>
+-<td class="success">updateUserById_requestUserDTOToBeUpdated_returnUpdatedUserDTO</td>
+-<td class="success">0.256s</td>
+-<td class="success">passed</td>
+-</tr>
+-</table>
+-</div>
+-<div id="tab1" class="tab">
+-<h2>Standard output</h2>
+-<span class="code">
+-<pre>01:12:02.129 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.130 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.132 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.132 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.137 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@3a60a258 testClass = UserController, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@d03736a testClass = UserController, locations = '{}', classes = '{class ch.course223.advanced.Main}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{classpath:application-test.properties}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@2a22fea7, [ImportsContextCustomizer@56f8b847 key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@6aeabc35, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@513c9b7e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@ceaad03, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@443b31f1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -&gt; true]], class annotated with @DirtiesContext [false] with mode [null].
+-01:12:02.148 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.149 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.200 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=-1}
+-
+-  .   ____          _            __ _ _
+- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+-  '  |____| .__|_| |_|_| |_\__, | / / / /
+- =========|_|==============|___/=/_/_/_/
+- :: Spring Boot ::        (v2.2.6.RELEASE)
+-
+-2020-04-12 01:12:03.005  INFO 4631 --- [    Test worker] c.c.a.d.user.unit.UserController         : Starting UserController on aschvin-Surface-Book with PID 4631 (started by aschvin in /home/aschvin/Documents/Yves_uek/uek_223_advanced)
+-2020-04-12 01:12:03.009  INFO 4631 --- [    Test worker] c.c.a.d.user.unit.UserController         : No active profile set, falling back to default profiles: default
+-2020-04-12 01:12:05.208  INFO 4631 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+-2020-04-12 01:12:05.480  INFO 4631 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 249ms. Found 4 JPA repository interfaces.
+-2020-04-12 01:12:08.383  INFO 4631 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+-2020-04-12 01:12:08.582  INFO 4631 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.12.Final
+-2020-04-12 01:12:08.674  INFO 4631 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+-2020-04-12 01:12:08.988  INFO 4631 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+-2020-04-12 01:12:09.452  INFO 4631 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+-2020-04-12 01:12:09.499  INFO 4631 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+-2020-04-12 01:12:10.047  WARN 4631 --- [    Test worker] org.hibernate.id.UUIDHexGenerator        : HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+-2020-04-12 01:12:11.097  INFO 4631 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+-2020-04-12 01:12:11.115  INFO 4631 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+-2020-04-12 01:12:11.571  WARN 4631 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+-2020-04-12 01:12:12.435  INFO 4631 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@12c4633a, org.springframework.security.web.context.SecurityContextPersistenceFilter@6e48473b, org.springframework.security.web.header.HeaderWriterFilter@afb4652, org.springframework.web.filter.CorsFilter@57484f5a, org.springframework.security.web.authentication.logout.LogoutFilter@5522bda3, ch.course223.advanced.security.JWTAuthenticationFilter@7a67fc29, ch.course223.advanced.security.JWTAuthorizationFilter@173fd314, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@59fece5a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@cd71a2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@26d3af7a, org.springframework.security.web.session.SessionManagementFilter@69b64fb2, org.springframework.security.web.access.ExceptionTranslationFilter@241f4d66, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@104636bb]
+-2020-04-12 01:12:14.822  INFO 4631 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+-2020-04-12 01:12:15.863  INFO 4631 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+-2020-04-12 01:12:15.864  INFO 4631 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+-2020-04-12 01:12:15.897  INFO 4631 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 31 ms
+-2020-04-12 01:12:15.951  INFO 4631 --- [    Test worker] c.c.a.d.user.unit.UserController         : Started UserController in 13.729 seconds (JVM running for 16.762)
+-2020-04-12 01:12:16.631  WARN 4631 --- [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity&lt;ch.course223.advanced.domainmodels.user.UserDTO&gt; ch.course223.advanced.domainmodels.user.UserController.create(ch.course223.advanced.domainmodels.user.UserDTO): [Field error in object 'userDTO' on field 'email': rejected value [null]; codes [NotNull.userDTO.email,NotNull.email,NotNull.java.lang.String,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [userDTO.email,email]; arguments []; default message [email]]; default message []] ]
+-</pre>
+-</span>
+-</div>
+-</div>
+-<div id="footer">
+-<p>
+-<div>
+-<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+-<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+-</label>
+-</div>Generated by 
+-<a href="http://www.gradle.org">Gradle 6.3</a> at Apr 12, 2020, 1:12:17 AM</p>
+-</div>
+-</div>
+-</body>
+-</html>
+Index: build/test-results/test/TEST-ch.course223.advanced.domainmodels.user.unit.UserController.xml
+===================================================================
+--- build/test-results/test/TEST-ch.course223.advanced.domainmodels.user.unit.UserController.xml	(revision 50a84ff1e6532f7fb8e792748b247a68a26b0013)
++++ build/test-results/test/TEST-ch.course223.advanced.domainmodels.user.unit.UserController.xml	(revision 50a84ff1e6532f7fb8e792748b247a68a26b0013)
+@@ -1,50 +0,0 @@
+-<?xml version="1.0" encoding="UTF-8"?>
+-<testsuite name="ch.course223.advanced.domainmodels.user.unit.UserController" tests="6" skipped="0" failures="0" errors="0" timestamp="2020-04-11T23:12:16" hostname="aschvin-Surface-Book" time="0.775">
+-  <properties/>
+-  <testcase name="findAll_requestAllUsers_returnsAllUsers" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.319"/>
+-  <testcase name="updateUserById_requestUserDTOToBeUpdated_returnUpdatedUserDTO" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.256"/>
+-  <testcase name="create_requestUserDTOWithMissingEmailToBeCreated_returnBadRequest" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.067"/>
+-  <testcase name="deleteUserById_requestADeletionOfUserById_returnAppropriateState" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.018"/>
+-  <testcase name="findById_requestUserById_returnsUser" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.03"/>
+-  <testcase name="create_deliverUserDTOToCreate_returnCreatedUserDTO" classname="ch.course223.advanced.domainmodels.user.unit.UserController" time="0.066"/>
+-  <system-out><![CDATA[01:12:02.129 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.130 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.132 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.132 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.137 [Test worker] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@3a60a258 testClass = UserController, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@d03736a testClass = UserController, locations = '{}', classes = '{class ch.course223.advanced.Main}', contextInitializerClasses = '[]', activeProfiles = '{}', propertySourceLocations = '{classpath:application-test.properties}', propertySourceProperties = '{org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@4b3fa0b3, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@2a22fea7, [ImportsContextCustomizer@56f8b847 key = [org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebClientAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcWebDriverAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration, org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcSecurityConfiguration]], org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@6aeabc35, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@513c9b7e, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@ceaad03, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@443b31f1], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true]], class annotated with @DirtiesContext [false] with mode [null].
+-01:12:02.148 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.149 [Test worker] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [ch.course223.advanced.domainmodels.user.unit.UserController]
+-01:12:02.200 [Test worker] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=-1}
+-
+-  .   ____          _            __ _ _
+- /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+-( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+- \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+-  '  |____| .__|_| |_|_| |_\__, | / / / /
+- =========|_|==============|___/=/_/_/_/
+- :: Spring Boot ::        (v2.2.6.RELEASE)
+-
+-2020-04-12 01:12:03.005  INFO 4631 --- [    Test worker] c.c.a.d.user.unit.UserController         : Starting UserController on aschvin-Surface-Book with PID 4631 (started by aschvin in /home/aschvin/Documents/Yves_uek/uek_223_advanced)
+-2020-04-12 01:12:03.009  INFO 4631 --- [    Test worker] c.c.a.d.user.unit.UserController         : No active profile set, falling back to default profiles: default
+-2020-04-12 01:12:05.208  INFO 4631 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+-2020-04-12 01:12:05.480  INFO 4631 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 249ms. Found 4 JPA repository interfaces.
+-2020-04-12 01:12:08.383  INFO 4631 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+-2020-04-12 01:12:08.582  INFO 4631 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.4.12.Final
+-2020-04-12 01:12:08.674  INFO 4631 --- [    Test worker] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+-2020-04-12 01:12:08.988  INFO 4631 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+-2020-04-12 01:12:09.452  INFO 4631 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+-2020-04-12 01:12:09.499  INFO 4631 --- [    Test worker] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.H2Dialect
+-2020-04-12 01:12:10.047  WARN 4631 --- [    Test worker] org.hibernate.id.UUIDHexGenerator        : HHH000409: Using org.hibernate.id.UUIDHexGenerator which does not generate IETF RFC 4122 compliant UUID values; consider using org.hibernate.id.UUIDGenerator instead
+-2020-04-12 01:12:11.097  INFO 4631 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+-2020-04-12 01:12:11.115  INFO 4631 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+-2020-04-12 01:12:11.571  WARN 4631 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+-2020-04-12 01:12:12.435  INFO 4631 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@12c4633a, org.springframework.security.web.context.SecurityContextPersistenceFilter@6e48473b, org.springframework.security.web.header.HeaderWriterFilter@afb4652, org.springframework.web.filter.CorsFilter@57484f5a, org.springframework.security.web.authentication.logout.LogoutFilter@5522bda3, ch.course223.advanced.security.JWTAuthenticationFilter@7a67fc29, ch.course223.advanced.security.JWTAuthorizationFilter@173fd314, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@59fece5a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@cd71a2, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@26d3af7a, org.springframework.security.web.session.SessionManagementFilter@69b64fb2, org.springframework.security.web.access.ExceptionTranslationFilter@241f4d66, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@104636bb]
+-2020-04-12 01:12:14.822  INFO 4631 --- [    Test worker] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+-2020-04-12 01:12:15.863  INFO 4631 --- [    Test worker] o.s.b.t.m.w.SpringBootMockServletContext : Initializing Spring TestDispatcherServlet ''
+-2020-04-12 01:12:15.864  INFO 4631 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Initializing Servlet ''
+-2020-04-12 01:12:15.897  INFO 4631 --- [    Test worker] o.s.t.web.servlet.TestDispatcherServlet  : Completed initialization in 31 ms
+-2020-04-12 01:12:15.951  INFO 4631 --- [    Test worker] c.c.a.d.user.unit.UserController         : Started UserController in 13.729 seconds (JVM running for 16.762)
+-2020-04-12 01:12:16.631  WARN 4631 --- [    Test worker] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.bind.MethodArgumentNotValidException: Validation failed for argument [0] in public org.springframework.http.ResponseEntity<ch.course223.advanced.domainmodels.user.UserDTO> ch.course223.advanced.domainmodels.user.UserController.create(ch.course223.advanced.domainmodels.user.UserDTO): [Field error in object 'userDTO' on field 'email': rejected value [null]; codes [NotNull.userDTO.email,NotNull.email,NotNull.java.lang.String,NotNull]; arguments [org.springframework.context.support.DefaultMessageSourceResolvable: codes [userDTO.email,email]; arguments []; default message [email]]; default message []] ]
+-]]></system-out>
+-  <system-err><![CDATA[]]></system-err>
+-</testsuite>
