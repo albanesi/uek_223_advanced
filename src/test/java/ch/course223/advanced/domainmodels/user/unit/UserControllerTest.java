@@ -10,6 +10,7 @@ import ch.course223.advanced.domainmodels.user.UserService;
 import ch.course223.advanced.error.BadRequestException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.ArrayUtils;
+import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -21,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -49,40 +51,32 @@ public class UserControllerTest {
     @MockBean
     private UserService userService;
 
-    private static Set<Authority> basicUserAuthorities;
-    private static Set<Authority> adminUserAuthorities;
-    private static Set<AuthorityDTO> basicUserAuthoritiesDTOS;
-    private static Set<AuthorityDTO> adminUserAuthoritiesDTOS;
+    private static User userToBeTestedAgainst;
+    private static List<User> listOfUsersToBeTestedAgainst;
 
-    private static Set<Role> basicUserRoles;
-    private static Set<Role> adminUserRoles;
-    private static Set<Role> mixedUserRoles;
-    private static Set<RoleDTO> mixedUserRolesDTOS;
+    private static UserDTO userDTOToBeTestedAgainst;
+    private static List<UserDTO> listOfUserDTOSToBeTestedAgainst;
 
     @BeforeClass
     public static void setUp(){
+        UUID uuidToBeTestedAgainst = UUID.randomUUID();
+        Set<Authority> authoritiesToBeTestedAgainst = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_SEE_GLOBAL"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY_OWN"), new Authority().setName("USER_MODIFY_GLOBAL"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
+        Set<Role> rolesToBeTestedAgainst = Stream.of(new Role().setName("BASIC_USER").setAuthorities(authoritiesToBeTestedAgainst)).collect(Collectors.toSet());
+        userToBeTestedAgainst = new User(uuidToBeTestedAgainst.toString()).setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(uuidToBeTestedAgainst.randomUUID().toString())).setRoles(rolesToBeTestedAgainst);
+        listOfUsersToBeTestedAgainst = Arrays.asList(userToBeTestedAgainst, userToBeTestedAgainst);
 
-        basicUserAuthorities = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_MODIFY_OWN")).collect(Collectors.toSet());
-        adminUserAuthorities = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_SEE_GLOBAL"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY_OWN"), new Authority().setName("USER_MODIFY_GLOBAL"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
-        basicUserAuthoritiesDTOS = Stream.of(new AuthorityDTO().setName("USER_SEE_OWN"), new AuthorityDTO().setName("USER_MODIFY_OWN")).collect(Collectors.toSet());
-        adminUserAuthoritiesDTOS = Stream.of(new AuthorityDTO().setName("USER_SEE_OWN"), new AuthorityDTO().setName("USER_SEE_GLOBAL"), new AuthorityDTO().setName("USER_CREATE"), new AuthorityDTO().setName("USER_MODIFY_OWN"), new AuthorityDTO().setName("USER_MODIFY_GLOBAL"), new AuthorityDTO().setName("USER_DELETE")).collect(Collectors.toSet());
-
-        basicUserRoles = Stream.of(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities)).collect(Collectors.toSet());
-        adminUserRoles = Stream.of(new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities)).collect(Collectors.toSet());
-        mixedUserRoles = Stream.of(new Role().setName("BASIC_USER").setAuthorities(basicUserAuthorities), new Role().setName("ADMIN_USER").setAuthorities(adminUserAuthorities)).collect(Collectors.toSet());
-        mixedUserRolesDTOS = Stream.of(new RoleDTO().setName("BASIC_USER").setAuthorities(basicUserAuthoritiesDTOS), new RoleDTO().setName("ADMIN_USER").setAuthorities(adminUserAuthoritiesDTOS)).collect(Collectors.toSet());
-
+        Set<AuthorityDTO> authorityDTOSToBeTestedAgainst = Stream.of(new AuthorityDTO().setName("USER_SEE_OWN"), new AuthorityDTO().setName("USER_SEE_GLOBAL"), new AuthorityDTO().setName("USER_CREATE"), new AuthorityDTO().setName("USER_MODIFY_OWN"), new AuthorityDTO().setName("USER_MODIFY_GLOBAL"), new AuthorityDTO().setName("USER_DELETE")).collect(Collectors.toSet());
+        Set<RoleDTO> roleDTOSToBeTestedAgainst = Stream.of(new RoleDTO().setName("BASIC_USER").setAuthorities(authorityDTOSToBeTestedAgainst)).collect(Collectors.toSet());
+        userDTOToBeTestedAgainst = new UserDTO(uuidToBeTestedAgainst.toString()).setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch").setRoles(roleDTOSToBeTestedAgainst);
+        listOfUserDTOSToBeTestedAgainst = Arrays.asList(userDTOToBeTestedAgainst, userDTOToBeTestedAgainst);
     }
 
     @Test
     @WithMockUser
     public void findById_requestUserById_returnsUser() throws Exception {
-
-        User adminUser = new User().setRoles(mixedUserRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
-
         given(userService.findById(anyString())).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
-            return (adminUser);
+            return (userToBeTestedAgainst);
         });
 
         UUID uuid = UUID.randomUUID();
@@ -91,48 +85,40 @@ public class UserControllerTest {
                 MockMvcRequestBuilders.get("/users/{id}", uuid.toString())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(adminUser.getFirstName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(adminUser.getLastName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(adminUser.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(mixedUserRoles.stream().map(Role::getName).toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(adminUserAuthorities.stream().map(Authority::getName).toArray(), basicUserAuthorities.stream().map(Authority::getName).toArray()))));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userToBeTestedAgainst.getFirstName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userToBeTestedAgainst.getLastName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userToBeTestedAgainst.getEmail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getRoles().stream().map(Role::getName).toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray())));
 
-        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
-        verify(userService, times(1)).findById(stringCaptor.capture());
-        Assert.assertEquals(uuid.toString(), stringCaptor.getValue());
+        ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(userService, times(1)).findById(stringArgumentCaptor.capture());
+        Assertions.assertThat(stringArgumentCaptor.getValue().equals(userToBeTestedAgainst.getId()));
     }
 
     @Test
     @WithMockUser
     public void findAll_requestAllUsers_returnsAllUsers() throws Exception {
-
-        User basicUser = new User().setRoles(basicUserRoles).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
-        User adminUser = new User().setRoles(adminUserRoles).setFirstName("john").setLastName("doe").setEmail("john.doe@noseryoung.ch");
-
-        given(userService.findAll()).willReturn(Arrays.asList(adminUser, basicUser));
+        given(userService.findAll()).willReturn(listOfUsersToBeTestedAgainst);
 
         mvc.perform(
                 MockMvcRequestBuilders.get("/users")
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].firstName").value(Matchers.containsInAnyOrder(basicUser.getFirstName(),adminUser.getFirstName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].lastName").value(Matchers.containsInAnyOrder(basicUser.getLastName(),adminUser.getLastName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].email").value(Matchers.containsInAnyOrder(basicUser.getEmail(),adminUser.getEmail())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].roles[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(basicUserRoles.stream().map(Role::getName).toArray(), adminUserRoles.stream().map(Role::getName).toArray()))))
-                .andExpect(MockMvcResultMatchers.jsonPath("$[*].roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(adminUserAuthorities.stream().map(Authority::getName).toArray(), basicUserAuthorities.stream().map(Authority::getName).toArray()))));
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].firstName").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getFirstName(),userToBeTestedAgainst.getFirstName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].lastName").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getLastName(),userToBeTestedAgainst.getLastName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].email").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getEmail(),userToBeTestedAgainst.getEmail())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].roles[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(userToBeTestedAgainst.getRoles().stream().map(Role::getName).toArray(), userToBeTestedAgainst.getRoles().stream().map(Role::getName).toArray()))))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray(), userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()))));
 
         verify(userService, times(1)).findAll();
-
     }
 
     @Test
     @WithMockUser
     public void create_deliverUserDTOToCreate_returnCreatedUserDTO() throws Exception {
-
-        UserDTO userDTO = new UserDTO().setRoles(mixedUserRolesDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
-
-        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTO);
+        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTOToBeTestedAgainst);
 
         given(userService.save(any(User.class))).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
@@ -147,54 +133,25 @@ public class UserControllerTest {
                         .content(userDTOAsJsonString)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userDTO.getFirstName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userDTO.getLastName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userDTO.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(mixedUserRolesDTOS.stream().map(RoleDTO::getName).toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(basicUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray()))));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userDTOToBeTestedAgainst.getFirstName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userDTOToBeTestedAgainst.getLastName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userDTOToBeTestedAgainst.getEmail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getName).toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getAuthorities).flatMap(Collection::stream).map(AuthorityDTO::getName).toArray())));
 
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userService, times(1)).save(userCaptor.capture());
-        Assert.assertEquals(userDTO.getFirstName(), userCaptor.getValue().getFirstName());
-        Assert.assertEquals(userDTO.getLastName(), userCaptor.getValue().getLastName());
-        Assert.assertEquals(userDTO.getEmail(), userCaptor.getValue().getEmail());
-        Assert.assertThat(mixedUserRolesDTOS.stream().map(RoleDTO::getName).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getName).toArray()));
-        Assert.assertThat(Arrays.stream(ArrayUtils.addAll(basicUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray())).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()));
-    }
-
-    @Test
-    @WithMockUser
-    public void create_requestUserDTOWithMissingEmailToBeCreated_returnBadRequest() throws Exception {
-
-        UserDTO adminUserDTO = new UserDTO().setRoles(mixedUserRolesDTOS).setFirstName("jane").setLastName("doe");
-        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(adminUserDTO);
-
-        given(userService.save(any(User.class))).will(invocation -> {
-            if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
-            UUID uuid = UUID.randomUUID();
-            User mirrorOfGivenDTO = invocation.getArgument(0);
-            return mirrorOfGivenDTO.setId(uuid.toString());
-        });
-
-        mvc.perform(
-                MockMvcRequestBuilders
-                        .post("/users")
-                        .content(userDTOAsJsonString)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-
-        verify(userService, never()).save(any(User.class));
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userService, times(1)).save(userArgumentCaptor.capture());
+        Assertions.assertThat(userArgumentCaptor.getValue().getFirstName().equals(userDTOToBeTestedAgainst.getFirstName()));
+        Assertions.assertThat(userArgumentCaptor.getValue().getFirstName().equals(userDTOToBeTestedAgainst.getLastName()));
+        Assertions.assertThat(userArgumentCaptor.getValue().getFirstName().equals(userDTOToBeTestedAgainst.getEmail()));
+        Assertions.assertThat(userArgumentCaptor.getValue().getRoles().stream().map(Role::getName).toArray()).containsExactlyInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getName).toArray());
+        Assertions.assertThat(userArgumentCaptor.getValue().getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()).containsExactlyInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getAuthorities).flatMap(Collection::stream).map(AuthorityDTO::getName).toArray());
     }
 
     @Test
     @WithMockUser
     public void updateUserById_requestUserDTOToBeUpdated_returnUpdatedUserDTO() throws Exception {
-
-        UserDTO userDTO = new UserDTO().setRoles(mixedUserRolesDTOS).setFirstName("jane").setLastName("doe").setEmail("jane.doe@noseryoung.ch");
-
-        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTO);
+        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTOToBeTestedAgainst);
 
         given(userService.updateById(anyString(), any(User.class))).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0)) || "non-existent".equals(invocation.getArgument(1))) throw new BadRequestException();
@@ -209,52 +166,26 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userDTO.getFirstName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userDTO.getLastName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userDTO.getEmail()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(mixedUserRolesDTOS.stream().map(RoleDTO::getName).toArray())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(ArrayUtils.addAll(basicUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray()))));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userDTOToBeTestedAgainst.getFirstName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userDTOToBeTestedAgainst.getLastName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userDTOToBeTestedAgainst.getEmail()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].name").value(Matchers.containsInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getName).toArray())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.roles[*].authorities[*].name").value(Matchers.containsInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getAuthorities).flatMap(Collection::stream).map(AuthorityDTO::getName).toArray())));
 
-        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-        verify(userService, times(1)).updateById(stringCaptor.capture(), userCaptor.capture());
-        Assert.assertEquals(uuid.toString(), stringCaptor.getValue());
-        Assert.assertEquals(userDTO.getFirstName(), userCaptor.getValue().getFirstName());
-        Assert.assertEquals(userDTO.getLastName(), userCaptor.getValue().getLastName());
-        Assert.assertEquals(userDTO.getEmail(), userCaptor.getValue().getEmail());
-        Assert.assertThat(mixedUserRolesDTOS.stream().map(RoleDTO::getName).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getName).toArray()));
-        Assert.assertThat(Arrays.stream(ArrayUtils.addAll(basicUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray())).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()));
+        ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(userService, times(1)).updateById(stringArgumentCaptor.capture(), userArgumentCaptor.capture());
+        Assertions.assertThat(stringArgumentCaptor.getValue().equals(userToBeTestedAgainst.getId()));
+        Assertions.assertThat(userArgumentCaptor.getValue().getFirstName().equals(userDTOToBeTestedAgainst.getFirstName()));
+        Assertions.assertThat(userArgumentCaptor.getValue().getFirstName().equals(userDTOToBeTestedAgainst.getLastName()));
+        Assertions.assertThat(userArgumentCaptor.getValue().getFirstName().equals(userDTOToBeTestedAgainst.getEmail()));
+        Assertions.assertThat(userArgumentCaptor.getValue().getRoles().stream().map(Role::getName).toArray()).containsExactlyInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getName).toArray());
+        Assertions.assertThat(userArgumentCaptor.getValue().getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()).containsExactlyInAnyOrder(userDTOToBeTestedAgainst.getRoles().stream().map(RoleDTO::getAuthorities).flatMap(Collection::stream).map(AuthorityDTO::getName).toArray());
     }
-
-    @Test
-    @WithMockUser
-    public void updateUserById_requestUserDTOWithFalseEmail_returnBadRequest() throws Exception {
-
-        UserDTO adminUserDTO = new UserDTO().setRoles(mixedUserRolesDTOS).setFirstName("jane").setLastName("doe");
-        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(adminUserDTO);
-
-        given(userService.updateById(anyString(), any(User.class))).will(invocation -> {
-            if ("non-existent".equals(invocation.getArgument(0)) || "non-existent".equals(invocation.getArgument(1))) throw new BadRequestException();
-            return ((User) invocation.getArgument(1)).setId(invocation.getArgument(0));
-        });
-
-        mvc.perform(
-                MockMvcRequestBuilders
-                        .post("/users")
-                        .content(userDTOAsJsonString)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-
-        verify(userService, never()).updateById(anyString(), any(User.class));
-
-    }
-
 
     @Test
     @WithMockUser
     public void deleteUserById_requestADeletionOfUserById_returnAppropriateState() throws Exception {
-
         given(userService.deleteById(anyString())).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
             return null;
@@ -267,9 +198,9 @@ public class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
 
-        ArgumentCaptor<String> stringCaptor = ArgumentCaptor.forClass(String.class);
-        verify(userService, times(1)).deleteById(stringCaptor.capture());
-        Assert.assertEquals(uuid.toString(),stringCaptor.getValue());
+        ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(userService, times(1)).deleteById(stringArgumentCaptor.capture());
+        Assert.assertEquals(uuid.toString(),stringArgumentCaptor.getValue());
     }
 
 }

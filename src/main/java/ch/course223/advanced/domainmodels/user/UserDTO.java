@@ -20,6 +20,10 @@ public class UserDTO extends ExtendedDTO {
     public UserDTO() {
     }
 
+    public UserDTO(String id) {
+        super(id);
+    }
+
     public UserDTO(String firstName, String lastName, String email, Set<RoleDTO> roles) {
         this.firstName = firstName;
         this.lastName = lastName;
