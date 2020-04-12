@@ -226,21 +226,29 @@ public class UserControllerTest {
         Assert.assertThat(Arrays.stream(ArrayUtils.addAll(basicUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray(), adminUserAuthoritiesDTOS.stream().map(AuthorityDTO::getName).toArray())).collect(Collectors.toList()), Matchers.containsInAnyOrder(userCaptor.getValue().getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()));
     }
 
-    /*@Test
+    @Test
     @WithMockUser
     public void updateUserById_requestUserDTOWithFalseEmail_returnBadRequest() throws Exception {
+
+        UserDTO adminUserDTO = new UserDTO().setRoles(mixedUserRolesDTOS).setFirstName("jane").setLastName("doe");
+        String userDTOAsJsonString = new ObjectMapper().writeValueAsString(adminUserDTO);
+
+        given(userService.updateById(anyString(), any(User.class))).will(invocation -> {
+            if ("non-existent".equals(invocation.getArgument(0)) || "non-existent".equals(invocation.getArgument(1))) throw new BadRequestException();
+            return ((User) invocation.getArgument(1)).setId(invocation.getArgument(0));
+        });
 
         mvc.perform(
                 MockMvcRequestBuilders
                         .post("/users")
-                        .content("")
+                        .content(userDTOAsJsonString)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
 
         verify(userService, never()).updateById(anyString(), any(User.class));
 
-    }*/
+    }
 
 
     @Test
