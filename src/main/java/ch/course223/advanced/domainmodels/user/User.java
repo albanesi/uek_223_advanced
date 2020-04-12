@@ -41,7 +41,6 @@ public class User extends ExtendedEntity {
     private Boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinColumn(name = "country_id", referencedColumnName = "id")
     @JoinTable(
             name = "users_role",
             joinColumns = @JoinColumn(name = "users_id"),
