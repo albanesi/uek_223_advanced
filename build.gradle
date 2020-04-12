@@ -20,9 +20,10 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	// implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 	testImplementation "org.springframework.boot:spring-boot-starter-test"
 	testImplementation "org.springframework.security:spring-security-test"
+	// implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+
 
 	// MapStruct
 	implementation "org.mapstruct:mapstruct:1.3.0.Final"
@@ -50,7 +51,7 @@ dependencies {
 	//Flyway
 	compile group: 'org.flywaydb', name: 'flyway-core', version: '6.3.3'
 
-	// https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+	//Apache Common
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
 
 
