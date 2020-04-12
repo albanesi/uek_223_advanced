@@ -15,7 +15,7 @@ public class Role extends ExtendedEntity {
   @Column(name = "name", nullable = false)
   private String name;
 
-  @ManyToMany(fetch = FetchType.EAGER)
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   @OnDelete(action = OnDeleteAction.CASCADE)
   @JoinTable(
           name = "role_authority",

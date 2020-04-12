@@ -133,7 +133,6 @@ public class UserServiceImplTest {
         Assertions.assertThat(updatedUser.getLastName()).isEqualTo(userToUpdate.getLastName());
         Assertions.assertThat(updatedUser.getEmail()).isEqualTo(userToUpdate.getEmail());
         Assertions.assertThat(updatedUser.getPassword()).isEqualTo(userToUpdate.getPassword());
-        Assertions.assertThat(updatedUser.getPassword()).isEqualTo(userToUpdate.getPassword());
 
     }
 

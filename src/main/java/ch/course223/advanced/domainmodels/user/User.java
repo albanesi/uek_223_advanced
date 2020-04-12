@@ -40,7 +40,7 @@ public class User extends ExtendedEntity {
     @Type(type = "org.hibernate.type.NumericBooleanType")
     private Boolean enabled;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "users_role",
             joinColumns = @JoinColumn(name = "users_id"),
