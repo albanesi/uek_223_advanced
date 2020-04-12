@@ -48,6 +48,10 @@ public class User extends ExtendedEntity {
     )
     private Set<Role> roles;
 
+    public User(String id) {
+        super(id);
+    }
+
     public User() {
 
     }
