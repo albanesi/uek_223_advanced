@@ -39,13 +39,10 @@ public class UserRepositoryTest {
     String userIdFromDBUser2;
     List<String> listOfIdsFromDB;
 
-    Set<Authority> authoritiesToBeTestedAgainst;
-    Set<Role> rolesToBeTestedAgainst;
-
     @Before
     public void setUp(){
-        authoritiesToBeTestedAgainst = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_SEE_GLOBAL"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY_OWN"), new Authority().setName("USER_MODIFY_GLOBAL"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
-        rolesToBeTestedAgainst = Stream.of(new Role().setName("BASIC_USER").setAuthorities(authoritiesToBeTestedAgainst)).collect(Collectors.toSet());
+        Set<Authority> authoritiesToBeTestedAgainst = Stream.of(new Authority().setName("USER_SEE_OWN"), new Authority().setName("USER_SEE_GLOBAL"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY_OWN"), new Authority().setName("USER_MODIFY_GLOBAL"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
+        Set<Role> rolesToBeTestedAgainst = Stream.of(new Role().setName("BASIC_USER").setAuthorities(authoritiesToBeTestedAgainst)).collect(Collectors.toSet());
         userToBeTestedAgainst1 = new User().setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(UUID.randomUUID().toString())).setRoles(rolesToBeTestedAgainst);
         userToBeTestedAgainst2 = new User().setFirstName("Jane").setLastName("Doe").setEmail("jane.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(UUID.randomUUID().toString())).setRoles(rolesToBeTestedAgainst);
         newUserToBeSaved = new User().setFirstName("Jack").setLastName("Doe").setEmail("jack.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(UUID.randomUUID().toString())).setRoles(rolesToBeTestedAgainst);
@@ -99,6 +96,7 @@ public class UserRepositoryTest {
         Assertions.assertThat(savedUser.getEnabled()).isEqualTo(newUserToBeSaved.getEnabled());
         Assertions.assertThat(savedUser.getPassword()).isEqualTo(newUserToBeSaved.getPassword());
         Assertions.assertThat(savedUser.getRoles().stream().map(Role::getName).toArray()).containsExactlyInAnyOrder(newUserToBeSaved.getRoles().stream().map(Role::getName).toArray());
+        Assertions.assertThat(savedUser.getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray()).containsExactlyInAnyOrder(newUserToBeSaved.getRoles().stream().map(Role::getAuthorities).flatMap(Collection::stream).map(Authority::getName).toArray());
 
     }
 

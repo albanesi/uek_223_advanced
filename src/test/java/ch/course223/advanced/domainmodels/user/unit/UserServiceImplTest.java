@@ -66,7 +66,7 @@ public class UserServiceImplTest {
         Assertions.assertThat(userReturnedByService.getEnabled()).isEqualTo(userToBeTestedAgainst.getEnabled());
         Assertions.assertThat(userReturnedByService.getPassword()).isEqualTo(userToBeTestedAgainst.getPassword());
         Assertions.assertThat(userReturnedByService.getRoles()).isEqualTo(userToBeTestedAgainst.getRoles());
-        Assertions.assertThat(userReturnedByService.getRoles().stream().map(Role::getAuthorities).toArray()).isEqualTo(userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).toArray());
+        Assertions.assertThat(userReturnedByService.getRoles().stream().map(Role::getAuthorities).toArray()).containsExactlyInAnyOrder(userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).toArray());
 
 
         ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
@@ -88,7 +88,7 @@ public class UserServiceImplTest {
         Assertions.assertThat(listOfUserReturnedByService.stream().map(User::getEnabled).toArray()).isEqualTo(listOfUsersToBeTestedAgainst.stream().map(User::getEnabled).toArray());
         Assertions.assertThat(listOfUserReturnedByService.stream().map(User::getPassword).toArray()).isEqualTo(listOfUsersToBeTestedAgainst.stream().map(User::getPassword).toArray());
         Assertions.assertThat(listOfUserReturnedByService.stream().map(User::getRoles).toArray()).isEqualTo(listOfUsersToBeTestedAgainst.stream().map(User::getRoles).toArray());
-        Assertions.assertThat(listOfUserReturnedByService.stream().map(User::getRoles).flatMap(Collection::stream).map(Role::getAuthorities).toArray()).isEqualTo(listOfUsersToBeTestedAgainst.stream().map(User::getRoles).flatMap(Collection::stream).map(Role::getAuthorities).toArray());
+        Assertions.assertThat(listOfUserReturnedByService.stream().map(User::getRoles).flatMap(Collection::stream).map(Role::getAuthorities).toArray()).containsExactlyInAnyOrder(listOfUsersToBeTestedAgainst.stream().map(User::getRoles).flatMap(Collection::stream).map(Role::getAuthorities).toArray());
 
         verify(userRepository, times(1)).findAll();
     }
@@ -111,7 +111,7 @@ public class UserServiceImplTest {
         Assertions.assertThat(userReturnedByService.getEnabled()).isEqualTo(userToBeTestedAgainst.getEnabled());
         Assertions.assertThat(userReturnedByService.getPassword()).isEqualTo(userToBeTestedAgainst.getPassword());
         Assertions.assertThat(userReturnedByService.getRoles()).isEqualTo(userToBeTestedAgainst.getRoles());
-        Assertions.assertThat(userReturnedByService.getRoles().stream().map(Role::getAuthorities).toArray()).isEqualTo(userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).toArray());
+        Assertions.assertThat(userReturnedByService.getRoles().stream().map(Role::getAuthorities).toArray()).containsExactlyInAnyOrder(userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).toArray());
 
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(userRepository, times(1)).save(userArgumentCaptor.capture());
@@ -138,7 +138,7 @@ public class UserServiceImplTest {
         Assertions.assertThat(userReturnedByService.getEnabled()).isEqualTo(userToBeTestedAgainst.getEnabled());
         Assertions.assertThat(userReturnedByService.getPassword()).isEqualTo(userToBeTestedAgainst.getPassword());
         Assertions.assertThat(userReturnedByService.getRoles()).isEqualTo(userToBeTestedAgainst.getRoles());
-        Assertions.assertThat(userReturnedByService.getRoles().stream().map(Role::getAuthorities).toArray()).isEqualTo(userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).toArray());
+        Assertions.assertThat(userReturnedByService.getRoles().stream().map(Role::getAuthorities).toArray()).containsExactlyInAnyOrder(userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).toArray());
 
         ArgumentCaptor<String> stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(userRepository, times(1)).existsById(stringArgumentCaptor.capture());
@@ -153,7 +153,7 @@ public class UserServiceImplTest {
         Assertions.assertThat(userArgumentCaptor.getValue().getEnabled()).isEqualTo(userToBeTestedAgainst.getEnabled());
         Assertions.assertThat(userArgumentCaptor.getValue().getPassword()).isEqualTo(userToBeTestedAgainst.getPassword());
         Assertions.assertThat(userArgumentCaptor.getValue().getRoles()).isEqualTo(userToBeTestedAgainst.getRoles());
-        Assertions.assertThat(userArgumentCaptor.getValue().getRoles().stream().map(Role::getAuthorities).toArray()).isEqualTo(userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).toArray());
+        Assertions.assertThat(userArgumentCaptor.getValue().getRoles().stream().map(Role::getAuthorities).toArray()).containsExactlyInAnyOrder(userToBeTestedAgainst.getRoles().stream().map(Role::getAuthorities).toArray());
     }
 
     @Test
