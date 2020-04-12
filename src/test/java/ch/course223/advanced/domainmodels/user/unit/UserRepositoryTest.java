@@ -46,9 +46,9 @@ public class UserRepositoryTest {
         userToBeTestedAgainst1 = new User().setFirstName("John").setLastName("Doe").setEmail("john.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(UUID.randomUUID().toString())).setRoles(rolesToBeTestedAgainst);
         userToBeTestedAgainst2 = new User().setFirstName("Jane").setLastName("Doe").setEmail("jane.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(UUID.randomUUID().toString())).setRoles(rolesToBeTestedAgainst);
         newUserToBeSaved = new User().setFirstName("Jack").setLastName("Doe").setEmail("jack.doe@noseryoung.ch").setEnabled(true).setPassword(new BCryptPasswordEncoder().encode(UUID.randomUUID().toString())).setRoles(rolesToBeTestedAgainst);
-        listOfUsersToBeTestedAgainst = Arrays.asList(userToBeTestedAgainst1, userToBeTestedAgainst2);
         userIdFromDBUser1 = testEntityManager.persistAndGetId(userToBeTestedAgainst1, String.class);
         userIdFromDBUser2 = testEntityManager.persistAndGetId(userToBeTestedAgainst2, String.class);
+        listOfUsersToBeTestedAgainst = Arrays.asList(userToBeTestedAgainst1, userToBeTestedAgainst2);
         listOfIdsFromDB = Arrays.asList(userIdFromDBUser1, userIdFromDBUser2);
     }
 
