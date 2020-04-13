@@ -1,0 +1,13 @@
+jdk:
+  - openjdk11
+
+jobs:
+  include:
+    - stage: CodeQuality
+      script: ./gradlew sonarqube
+
+addons:
+  sonarcloud:
+    organization: $SONAR_USER
+    token:
+      secure: $SONAR_TOKEN
