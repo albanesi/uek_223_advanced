@@ -4,14 +4,6 @@ jdk:
 before_install:
   - chmod +x gradlew
 
-jobs:
-  include:
-    - stage: DeployingToHeroku
-      deploy:
-        provider: heroku
-        api-key: $HEROKU_API_KEY
-        app: yagan93
-
 addons:
   sonarcloud:
     organization: $SONAR_USER
@@ -19,3 +11,11 @@ addons:
 
 script:
   - ./gradlew sonarqube
+
+jobs:
+  include:
+    - stage: DeployingToHeroku
+      deploy:
+        provider: heroku
+        api-key: $HEROKU_API_KEY
+        app: yagan93
