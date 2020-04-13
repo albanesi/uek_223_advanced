@@ -12,7 +12,7 @@ addons:
 jobs:
   include:
     - stage: CodeQualityWithUnitAndIntegrationTesting
-       script: ./gradlew sonarqube
+      script: ./gradlew sonarqube
     - stage: DeployingToStagingHeroku
       deploy:
        provider: heroku
