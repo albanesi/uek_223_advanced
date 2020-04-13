@@ -12,11 +12,10 @@ addons:
 jobs:
   include:
     - stage: CodeQualityWithUnitAndIntegrationTesting
-       script: ./gradlew sonarqube
+      script: ./gradlew sonarqube
     - stage: DeployingToStagingHeroku
-       deploy:
-        provider: heroku
-        api-key: $HEROKU_API_KEY
-        app: yagan93
-    - stage: SystemTesting
-    - stage: DeployingToProductionHeroku
+      deploy:
+       provider: heroku
+       api-key: $HEROKU_API_KEY
+       app: yagan93
+
