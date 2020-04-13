@@ -3,8 +3,14 @@ jdk:
 
 jobs:
   include:
-    - stage: CodeQuality
+    - stage: CodeQualityAndTesting
       script: ./gradlew sonarqube
+    - stage: DeployingToHeroku
+      deploy:
+        provider: heroku
+        api-key:
+          secure: $HEROKU_API_KEY
+        app: gamestore-api
 
 addons:
   sonarcloud:
