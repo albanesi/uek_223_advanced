@@ -10,8 +10,10 @@ jobs:
       deploy:
         provider: heroku
         api-key: $HEROKU_API_KEY
-        app: yagan93
-
+        app:
+          master: yagan93
+          production: yagan93
+        run: "rake db:migrate"
 addons:
   sonarcloud:
     organization: $SONAR_USER
