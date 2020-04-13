@@ -1,6 +1,9 @@
 jdk:
   - openjdk11
 
+before_install:
+  - chmod +x gradlew
+
 jobs:
   include:
     - stage: DeployingToHeroku
@@ -14,3 +17,6 @@ addons:
   sonarcloud:
     organization: $SONAR_USER
     token: $SONAR_TOKEN
+
+script:
+  - ./gradlew sonarqube
