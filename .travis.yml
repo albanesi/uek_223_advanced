@@ -10,9 +10,7 @@ jobs:
       deploy:
         provider: heroku
         api-key: $HEROKU_API_KEY
-        app:
-          master: yagan93
-          production: yagan93
+        app: yagan93
 
 addons:
   sonarcloud:
