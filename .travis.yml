@@ -4,7 +4,7 @@ jdk:
 jobs:
   include:
     - stage: CodeQuality
-      script: ./gradlew sonarqube
+      script: ./gradlew sonarqube --stracktrace
 
 addons:
   sonarcloud:
