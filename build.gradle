@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 	id 'war'
+	id "org.sonarqube" version "2.8"
 }
 
 group = 'ch.course223.'
@@ -55,6 +56,12 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
 
 
+}
+
+sonarqube {
+  properties {
+    property "sonar.projectKey", "yagan93_uek_223_advanced"
+  }
 }
 
 test {
