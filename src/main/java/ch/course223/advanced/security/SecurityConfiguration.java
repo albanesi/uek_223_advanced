@@ -69,7 +69,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		propertyReader = new PropertyReader("application.properties");
+		propertyReader = new PropertyReader("jwt.properties");
 
 		http.cors().and().csrf().disable().
 				authorizeRequests()
