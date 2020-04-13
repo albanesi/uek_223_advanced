@@ -12,10 +12,7 @@ addons:
 script:
   - ./gradlew sonarqube
 
-jobs:
-  include:
-    - stage: DeployingToHeroku
-      deploy:
-        provider: heroku
-        api-key: $HEROKU_API_KEY
-        app: yagan93
+deploy:
+  provider: heroku
+  api-key: $HEROKU_API_KEY
+  app: yagan93
