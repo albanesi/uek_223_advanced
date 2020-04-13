@@ -13,7 +13,7 @@ jobs:
         app:
           master: yagan93
           production: yagan93
-        run: "rake db:migrate"
+
 addons:
   sonarcloud:
     organization: $SONAR_USER
