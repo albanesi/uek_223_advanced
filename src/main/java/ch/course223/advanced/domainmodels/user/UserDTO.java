@@ -12,7 +12,6 @@ public class UserDTO extends ExtendedDTO {
 
     private String lastName;
 
-    @NotNull
     private String email;
 
     private Set<RoleDTO> roles;

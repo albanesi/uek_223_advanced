@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ch.course223.advanced.domainmodels.user.unit.UserServiceImplTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2020-04-13T10:27:55" hostname="Yvess-MacBook-Pro.local" time="0.035">
+  <properties/>
+  <testcase name="findAll_requestAllUsers_returnsAllUsers" classname="ch.course223.advanced.domainmodels.user.unit.UserServiceImplTest" time="0.009"/>
+  <testcase name="updateUserById_requestUserToBeUpdated_returnUpdatedUser" classname="ch.course223.advanced.domainmodels.user.unit.UserServiceImplTest" time="0.012"/>
+  <testcase name="deleteUserById_requestADeletionOfUserById_returnAppropriateState" classname="ch.course223.advanced.domainmodels.user.unit.UserServiceImplTest" time="0.004"/>
+  <testcase name="findById_requestUserById_returnsUser" classname="ch.course223.advanced.domainmodels.user.unit.UserServiceImplTest" time="0.003"/>
+  <testcase name="create_deliverUserToCreate_returnCreatedUser" classname="ch.course223.advanced.domainmodels.user.unit.UserServiceImplTest" time="0.003"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

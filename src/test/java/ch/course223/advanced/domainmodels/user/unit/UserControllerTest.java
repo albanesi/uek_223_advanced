@@ -45,6 +45,16 @@ import static org.mockito.Mockito.*;
 @TestPropertySource("classpath:application-test.properties")
 public class UserControllerTest {
 
+    /*
+    Exercise 1
+    The REST Endpoint UserController.updateById expects a UserDTO and an adequate Id. The annotation @Valid indicates that
+    the sent UserDTO is to be validated before it is updated. Spring Boot offers multiple validators such as @Max, @Min or @NotNull.
+    These validators can be placed above attributes in DTO classes. Annotate the UserDTO attribute email with @Email and write a negative
+    UnitTest that ensures that all sent UserDTOs with invalid emails are rejected. Mock the UserService and make sure its only being called once.
+    Also implement a capturer that tests if the mock is invoked with the right parameters.
+    P.S Try to solve the exercises with Lambdas :-)
+     */
+
     @Autowired
     private MockMvc mvc;
 

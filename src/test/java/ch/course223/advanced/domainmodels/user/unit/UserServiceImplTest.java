@@ -29,6 +29,14 @@ import static org.mockito.Mockito.verify;
 @TestPropertySource("classpath:application-test.properties")
 public class UserServiceImplTest {
 
+    /*
+    Exercise 2
+    The ExtendedService imposes a method T findById(String id) on UserServiceImpl. The method is outsourced to ExtendedServiceImpl.
+    Write a UnitTest that ensures that User findById(String id) functions correctly. Mock the UserRepository and make sure its only being called once.
+    Also implement a capturer that tests if the mock is invoked with the right parameters.
+    P.S Try to solve the exercises with Lambdas :-)
+     */
+
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -170,29 +178,6 @@ public class UserServiceImplTest {
         verify(userRepository, times(1)).deleteById(stringArgumentCaptor.capture());
         Assertions.assertThat(stringArgumentCaptor.getValue().equals(userToBeTestedAgainst.getId()));
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 }

@@ -11,7 +11,6 @@ import java.util.NoSuchElementException;
 @Service
 public class UserServiceImpl extends ExtendedServiceImpl<User> implements UserService{
 
-
     public UserServiceImpl(ExtendedJpaRepository<User> repository) {
         super(repository);
     }

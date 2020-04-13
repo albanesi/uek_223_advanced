@@ -24,6 +24,12 @@ import java.util.stream.Stream;
 @TestPropertySource("classpath:application-test.properties")
 public class UserRepositoryTest {
 
+    /*
+    Exercise 3
+    There is no real instance of PostgreSQL being involved here. Instead we are making usage of H2.
+    Where are the needed credentials to connect to the datalayer fetched from? Does H2 provide a UI to check inserted tuples?
+     */
+
     @Autowired
     private TestEntityManager testEntityManager;
 
