@@ -11,5 +11,3 @@ addons:
     organization: $SONAR_USER
     token:
       secure: $SONAR_TOKEN
-
-
