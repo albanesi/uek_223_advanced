@@ -4,6 +4,7 @@ plugins {
 	id 'java'
 	id 'war'
 	id "org.sonarqube" version "2.8"
+	id("com.palantir.docker-run") version "0.22.1"
 }
 
 group = 'ch.course223.'
@@ -55,6 +56,17 @@ dependencies {
 	//Apache Common
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.10'
 
+}
+
+dockerRun {
+	image = "postgres"
+	name = "uek223advanced"
+	ports("5432:5432")
+	env 'POSTGRES_PASSWORD': 'postgres', 'POSTGRES_USER': 'postgres'
+}
+
+bootJar {
+	archiveFileName.set("app.jar")
 }
 
 sonarqube {
