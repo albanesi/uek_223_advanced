@@ -3,8 +3,6 @@ jdk:
 
 jobs:
   include:
-    - stage: CodeQualityAndTesting
-      script: ./gradlew sonarqube
     - stage: DeployingToHeroku
       deploy:
         provider: heroku
