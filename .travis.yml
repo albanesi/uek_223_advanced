@@ -9,15 +9,14 @@ addons:
     organization: $SONAR_USER
     token: $SONAR_TOKEN
 
-jobs:
-  include:
-    - stage: CodeQualityWithUnitAndIntegrationTesting
-      script: ./gradlew sonarqube
-    - stage: DeployingToStagingHeroku
-      deploy:
-       provider: heroku
-       api-key: $HEROKU_API_KEY
-       app: yagan93
+script:
+  - ./gradlew sonarqube
+
+deploy:
+  provider: heroku
+  api-key: $HEROKU_API_KEY
+  app: yagan93
+  
  #   - stage: SystemTesting
  #     echo "toBeImplemented"
  #   - stage: DeployingToProductionHeroku
