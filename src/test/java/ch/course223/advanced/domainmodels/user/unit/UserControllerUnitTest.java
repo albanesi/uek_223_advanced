@@ -43,7 +43,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource("classpath:application-test.properties")
-public class UserControllerTest {
+public class UserControllerUnitTest {
 
     /*
     Exercise 1
@@ -89,12 +89,11 @@ public class UserControllerTest {
             return (userToBeTestedAgainst);
         });
 
-        UUID uuid = UUID.randomUUID();
-
         mvc.perform(
-                MockMvcRequestBuilders.get("/users/{id}", uuid.toString())
+                MockMvcRequestBuilders.get("/users/{id}", userToBeTestedAgainst.getId())
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(userToBeTestedAgainst.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userToBeTestedAgainst.getFirstName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userToBeTestedAgainst.getLastName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userToBeTestedAgainst.getEmail()))
@@ -116,6 +115,7 @@ public class UserControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$[*].id").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getId(),userToBeTestedAgainst.getId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].firstName").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getFirstName(),userToBeTestedAgainst.getFirstName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].lastName").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getLastName(),userToBeTestedAgainst.getLastName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$[*].email").value(Matchers.containsInAnyOrder(userToBeTestedAgainst.getEmail(),userToBeTestedAgainst.getEmail())))
@@ -130,9 +130,10 @@ public class UserControllerTest {
     public void create_deliverUserDTOToCreate_returnCreatedUserDTO() throws Exception {
         String userDTOAsJsonString = new ObjectMapper().writeValueAsString(userDTOToBeTestedAgainst);
 
+        UUID uuid = UUID.randomUUID();
+
         given(userService.save(any(User.class))).will(invocation -> {
             if ("non-existent".equals(invocation.getArgument(0))) throw new BadRequestException();
-            UUID uuid = UUID.randomUUID();
             User user = invocation.getArgument(0);
             return user.setId(uuid.toString());
         });
@@ -143,6 +144,7 @@ public class UserControllerTest {
                         .content(userDTOAsJsonString)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(uuid.toString()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userDTOToBeTestedAgainst.getFirstName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userDTOToBeTestedAgainst.getLastName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userDTOToBeTestedAgainst.getEmail()))
@@ -168,14 +170,13 @@ public class UserControllerTest {
             return ((User) invocation.getArgument(1)).setId(invocation.getArgument(0));
         });
 
-        UUID uuid = UUID.randomUUID();
-
         mvc.perform(
-                MockMvcRequestBuilders.put("/users/{id}", uuid.toString())
+                MockMvcRequestBuilders.put("/users/{id}", userDTOToBeTestedAgainst.getId())
                         .content(userDTOAsJsonString)
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(userDTOToBeTestedAgainst.getId()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(userDTOToBeTestedAgainst.getFirstName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.lastName").value(userDTOToBeTestedAgainst.getLastName()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(userDTOToBeTestedAgainst.getEmail()))

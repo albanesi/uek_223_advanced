@@ -27,7 +27,7 @@ import static org.mockito.Mockito.verify;
 
 @RunWith(SpringRunner.class)
 @TestPropertySource("classpath:application-test.properties")
-public class UserServiceImplTest {
+public class UserServiceImplUnitTest {
 
     /*
     Exercise 2

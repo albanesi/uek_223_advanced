@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @TestPropertySource("classpath:application-test.properties")
-public class UserRepositoryTest {
+public class UserRepositoryUnitTest {
 
     /*
     Exercise 3
