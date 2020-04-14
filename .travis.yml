@@ -16,7 +16,7 @@ addons:
 jobs:
   include:
     - stage: phase1
-      # script: ./gradlew sonarqube
+      script: sonar-scanner
     - stage: phase2
       deploy:
         provider: heroku
