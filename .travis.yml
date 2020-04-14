@@ -2,30 +2,29 @@ jdk:
   - openjdk11
   
 stages:
-  - phase1
-  - phase2
+  - buildAutomation
+  - continousIntegration
+  - continousDelivery
+  - continousDeployment
+  
 
 before_install:
   - chmod +x gradlew
-
-addons:
-  sonarcloud:
-    organization: $SONAR_USER
-    token: $SONAR_TOKEN
     
 jobs:
   include:
-    - stage: phase1
-      script: sonar-scanner
-    - stage: phase2
+    - stage: buildAutomation
+      script: ./gradlew test --tests '*unit*'
+    - stage: continousIntegration
+      script: ./gradlew test --tests '*integration*'
+    - stage: continousDelivery
       deploy:
         provider: heroku
         api-key: $HEROKU_API_KEY
         app: yagan93
-  
- #   - stage: SystemTesting
- #     echo "toBeImplemented"
- #   - stage: DeployingToProductionHeroku
- #     echo "toBeImplemented"
+      after_success:
+      # run newman skripts
+    - stage: continousDeployment
+      
 
 
