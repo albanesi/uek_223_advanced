@@ -36,6 +36,12 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @TestPropertySource(locations = "classpath:application-test.properties")
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public class UserIntegrationTest {
+    
+    /*
+    Exercise 4
+    Write the remaining 4 Integrationtests to fully cover the basic CRUD logic of the domainmodel User. 
+    The already written Test findById_requestUserById_returnsUser() functions as an example. 
+    */
 
     @Autowired
     private UserRepository userRepository;
