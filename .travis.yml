@@ -1,5 +1,9 @@
 jdk:
   - openjdk11
+  
+stages:
+  - phase1
+  - phase2
 
 before_install:
   - chmod +x gradlew
@@ -8,14 +12,16 @@ addons:
   sonarcloud:
     organization: $SONAR_USER
     token: $SONAR_TOKEN
-
-script:
-  - ./gradlew sonarqube
-
-deploy:
-  provider: heroku
-  api-key: $HEROKU_API_KEY
-  app: yagan93
+    
+jobs:
+  include:
+    - stage: compile
+      script: ./gradlew sonarqube
+    - stage: deploy
+      deploy:
+        provider: heroku
+        api-key: $HEROKU_API_KEY
+        app: yagan93
   
  #   - stage: SystemTesting
  #     echo "toBeImplemented"
