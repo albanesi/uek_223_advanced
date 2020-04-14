@@ -10,6 +10,9 @@ stages:
 
 before_install:
   - chmod +x gradlew
+  
+install:
+  - npm install newman
     
 jobs:
   include:
@@ -25,6 +28,3 @@ jobs:
       after_success:
       # run newman skripts
     - stage: continousDeployment
-      
-
-
