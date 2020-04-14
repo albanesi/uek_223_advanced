@@ -15,9 +15,9 @@ addons:
     
 jobs:
   include:
-    - stage: compile
+    - stage: phase1
       script: ./gradlew sonarqube
-    - stage: deploy
+    - stage: phase2
       deploy:
         provider: heroku
         api-key: $HEROKU_API_KEY
