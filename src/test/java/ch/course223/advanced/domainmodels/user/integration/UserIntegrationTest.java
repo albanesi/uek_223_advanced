@@ -50,13 +50,10 @@ public class UserIntegrationTest {
     private MockMvc mvc;
 
     @Before
-    public void setUp(){
-
-    }
+    public void setUp(){}
 
     @Test
     public void findById_requestUserById_returnsUser() throws Exception {
-
         UUID uuidToBeTestedAgainst = UUID.randomUUID();
         Set<Authority> authoritiesToBeTestedAgainst = Stream.of(new Authority().setName("USER_SEE"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
         Set<Role> rolesToBeTestedAgainst = Stream.of(new Role().setName("BASIC_USER").setAuthorities(authoritiesToBeTestedAgainst)).collect(Collectors.toSet());
