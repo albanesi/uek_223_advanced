@@ -1,12 +1,9 @@
+language: java
+
 jdk:
   - openjdk11
 
-language: 
-  - java
-  - node_js
-  
-node_js:
-  - node
+node_js: "10"
   
 stages:
  # - continousIntegration
@@ -16,6 +13,7 @@ before_install:
   - chmod +x gradlew
   
 install:
+  - npm install
   - npm install -g newman
   
 before_script:
