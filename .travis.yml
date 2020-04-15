@@ -16,7 +16,7 @@ before_install:
   - chmod +x gradlew
   
 before_script:
-- npm install -g newman
+  - npm install -g newman
   
 addons:
   sonarcloud:
