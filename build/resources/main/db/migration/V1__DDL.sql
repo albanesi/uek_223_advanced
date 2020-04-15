@@ -13,33 +13,20 @@ SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
-
 CREATE TABLE public.authority (
     id character varying(255) NOT NULL,
     name character varying(255) NOT NULL
 );
-
-
-ALTER TABLE public.authority OWNER TO postgres;
-
 
 CREATE TABLE public.role (
     id character varying(255) NOT NULL,
     name character varying(255) NOT NULL
 );
 
-
-ALTER TABLE public.role OWNER TO postgres;
-
-
 CREATE TABLE public.role_authority (
     role_id character varying(255) NOT NULL,
     authority_id character varying(255) NOT NULL
 );
-
-
-ALTER TABLE public.role_authority OWNER TO postgres;
-
 
 CREATE TABLE public.users (
     id character varying(255) NOT NULL,
@@ -53,18 +40,10 @@ CREATE TABLE public.users (
     password character varying(255)
 );
 
-
-ALTER TABLE public.users OWNER TO postgres;
-
-
 CREATE TABLE public.users_role (
     users_id character varying(255) NOT NULL,
     role_id character varying(255) NOT NULL
 );
-
-
-ALTER TABLE public.users_role OWNER TO postgres;
-
 
 ALTER TABLE ONLY public.authority
     ADD CONSTRAINT authority_pkey PRIMARY KEY (id);
