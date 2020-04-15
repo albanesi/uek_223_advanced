@@ -4,7 +4,6 @@ jdk:
 stages:
   - unitTestsAndIntegrationTests
   - continousDelivery
-  - continousDeployment
   
 before_install:
   - chmod +x gradlew
@@ -14,13 +13,10 @@ before_install:
     
 jobs:
   include:
-    - stage: unitTestsAndIntegrationTests
-      script: ./gradlew test 
+#    - stage: unitTestsAndIntegrationTests
+#      script: ./gradlew test 
     - stage: continousDelivery
       deploy:
         provider: heroku
         api-key: $HEROKU_API_KEY
         app: uek223staging
-      after_success:
-    #  script: newman run src/test/java/system/collection/uek223_advanced.postman_collection.json -e src/test/java/system/environment/uek223_advanced.postman_environment.json
-    - stage: continousDeployment
