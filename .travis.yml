@@ -15,7 +15,7 @@ stages:
 before_install:
   - chmod +x gradlew
   
-install:
+before_script:
 - npm install -g newman
   
 addons:
