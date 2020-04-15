@@ -6,7 +6,7 @@ language:
   - node_js
   
 node_js:
-  - "12.9.0"
+  - 12
   
 stages:
  # - continousIntegration
@@ -16,7 +16,6 @@ before_install:
   - chmod +x gradlew
   
 install:
-- npm install
 - npm install -g newman
   
 addons:
