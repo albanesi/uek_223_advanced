@@ -1,7 +1,9 @@
 jdk:
   - openjdk11
 
-language: java
+language: 
+  - java
+  - node_js
   
 stages:
  # - continousIntegration
