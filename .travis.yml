@@ -6,7 +6,7 @@ language:
   - node_js
   
 node_js:
-  - "stable"
+  - node
   
 stages:
  # - continousIntegration
@@ -15,14 +15,14 @@ stages:
 before_install:
   - chmod +x gradlew
   
+install:
+  - npm install -g newman
+  
 before_script:
   - node --version
   - npm --version
   - node_modules/.bin/newman --version
-  
-install:
-  - npm install -g newman
-  
+   
 addons:
   sonarcloud:
     organization: $SONAR_USER
