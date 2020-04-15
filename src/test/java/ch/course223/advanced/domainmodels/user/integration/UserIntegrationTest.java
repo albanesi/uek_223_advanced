@@ -36,6 +36,12 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @TestPropertySource(locations = "classpath:application-test.properties")
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 public class UserIntegrationTest {
+    
+    /*
+    Exercise 4
+    Write the remaining 4 Integrationtests to fully cover the basic CRUD logic of the domainmodel User. 
+    The already written Test findById_requestUserById_returnsUser() functions as an example. 
+    */
 
     @Autowired
     private UserRepository userRepository;
@@ -44,13 +50,10 @@ public class UserIntegrationTest {
     private MockMvc mvc;
 
     @Before
-    public void setUp(){
-
-    }
+    public void setUp(){}
 
     @Test
     public void findById_requestUserById_returnsUser() throws Exception {
-
         UUID uuidToBeTestedAgainst = UUID.randomUUID();
         Set<Authority> authoritiesToBeTestedAgainst = Stream.of(new Authority().setName("USER_SEE"), new Authority().setName("USER_CREATE"), new Authority().setName("USER_MODIFY"), new Authority().setName("USER_DELETE")).collect(Collectors.toSet());
         Set<Role> rolesToBeTestedAgainst = Stream.of(new Role().setName("BASIC_USER").setAuthorities(authoritiesToBeTestedAgainst)).collect(Collectors.toSet());
