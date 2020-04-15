@@ -30,4 +30,3 @@ jobs:
       after_success:
       script: newman run src/test/java/systemtests/collection/CRUD.postman_collection.json -e src/test/java/systemtests/uek223advancedenv.postman_environment.json
 
-
