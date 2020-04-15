@@ -5,6 +5,9 @@ language:
   - java
   - node_js
   
+node_js:
+  - "12.9.0"
+  
 stages:
  # - continousIntegration
   - continousDelivery
