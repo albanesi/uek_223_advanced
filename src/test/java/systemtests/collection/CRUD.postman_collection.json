@@ -14,7 +14,7 @@
 						"id": "4c2fb767-e497-42bf-9d75-2b033be0b3ba",
 						"exec": [
 							"pm.test(\"Response time is less than 200ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 201\", function () {",
@@ -74,7 +74,7 @@
 						"id": "1b03b5e6-0516-4221-8a16-974b020a5f1b",
 						"exec": [
 							"pm.test(\"Response time is less than 200ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -123,7 +123,7 @@
 						"id": "9ee9497b-e55f-4070-b808-42456ac2100c",
 						"exec": [
 							"pm.test(\"Response time is less than 200ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 200\", function () {",
@@ -179,7 +179,7 @@
 						"id": "9ee9497b-e55f-4070-b808-42456ac2100c",
 						"exec": [
 							"pm.test(\"Response time is less than 1000ms\", function () {",
-							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"    pm.expect(pm.response.responseTime).to.be.below(2000);",
 							"});",
 							"",
 							"pm.test(\"Status code is 204\", function () {",
