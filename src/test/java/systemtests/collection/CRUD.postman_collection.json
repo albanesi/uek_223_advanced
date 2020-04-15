@@ -22,11 +22,11 @@
 							"});",
 							"",
 							"pm.test(\"Check if created user is equals returned user\", function () {",
-							"    const jsonData = pm.response.json();",
+							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.firstName).to.eql(JSON.parse(pm.environment.get(\"userDTOToBeTestedAgainst1\")).firstName);",
 							"    pm.expect(jsonData.lastName).to.eql(JSON.parse(pm.environment.get(\"userDTOToBeTestedAgainst1\")).lastName);",
 							"    pm.expect(jsonData.email).to.eql(JSON.parse(pm.environment.get(\"userDTOToBeTestedAgainst1\")).email);",
-							"    pm.environment.set(\"userDTOToBeTestedAgainst1\",jsonData);",
+							"    pm.environment.set(\"userDTOToBeTestedAgainst1\",JSON.stringify(jsonData));",
 							"    pm.environment.set(\"userDTOToBeTestedAgainstId1\",jsonData.id);",
 							"});",
 							"",
@@ -67,11 +67,49 @@
 		},
 		{
 			"name": "FindUser",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "1b03b5e6-0516-4221-8a16-974b020a5f1b",
+						"exec": [
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
+							"});",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Check if user exists\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"userDTOToBeTestedAgainstId1\"));",
+							"    pm.expect(jsonData.firstName).to.eql(JSON.parse(pm.environment.get(\"userDTOToBeTestedAgainst1\")).firstName);",
+							"    pm.expect(jsonData.lastName).to.eql(JSON.parse(pm.environment.get(\"userDTOToBeTestedAgainst1\")).lastName);",
+							"    pm.expect(jsonData.email).to.eql(JSON.parse(pm.environment.get(\"userDTOToBeTestedAgainst1\")).email);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": ""
+					"raw": "https://uek223staging.herokuapp.com/users/{{userDTOToBeTestedAgainstId1}}",
+					"protocol": "https",
+					"host": [
+						"uek223staging",
+						"herokuapp",
+						"com"
+					],
+					"path": [
+						"users",
+						"{{userDTOToBeTestedAgainstId1}}"
+					]
 				}
 			},
 			"response": []
@@ -84,18 +122,21 @@
 					"script": {
 						"id": "9ee9497b-e55f-4070-b808-42456ac2100c",
 						"exec": [
-							"pm.test(\"Response time is less than 1000ms\", function () {",
+							"pm.test(\"Response time is less than 200ms\", function () {",
 							"    pm.expect(pm.response.responseTime).to.be.below(1000);",
 							"});",
 							"",
-							"pm.test(\"Status code is 204\", function () {",
-							"    pm.response.to.have.status(204);",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"pm.test(\"Response body is null\", function () {",
-							"    pm.responseBody === null",
-							"})",
-							""
+							"pm.test(\"Check if created user is equals returned user\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"userDTOToBeTestedAgainstId1\"));",
+							"    pm.expect(jsonData.firstName).to.eql(JSON.parse(pm.environment.get(\"userDTOToBeTestedAgainst1\")).firstName);",
+							"    pm.expect(jsonData.lastName).to.eql(JSON.parse(pm.environment.get(\"userDTOToBeTestedAgainst1\")).lastName);",
+							"    pm.expect(jsonData.email).to.eql(JSON.parse(pm.environment.get(\"userDTOToBeTestedAgainst1\")).email);",
+							"});"
 						],
 						"type": "text/javascript"
 					}
@@ -104,6 +145,15 @@
 			"request": {
 				"method": "PUT",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{{userDTOToBeTestedAgainst1}}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "https://uek223staging.herokuapp.com/users/{{userDTOToBeTestedAgainstId1}}",
 					"protocol": "https",
@@ -136,7 +186,7 @@
 							"    pm.response.to.have.status(204);",
 							"});",
 							"",
-							"pm.test(\"Response body is null\", function () {",
+							"pm.test(\"Check if no body is returned\", function () {",
 							"    pm.responseBody === null",
 							"})",
 							""
