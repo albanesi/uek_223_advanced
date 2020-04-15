@@ -1,23 +1,17 @@
-language: java
+language: node_js
 
-jdk:
-  - openjdk11
-  
+node_js:
+  - 10
+
 stages:
- # - continousIntegration
+  - continousIntegration
   - continousDelivery
 
 before_install:
   - chmod +x gradlew
-  - nvm install 0.10
   
 install:
   - npm install -g newman
-  
-before_script:
-  - node --version
-  - npm --version
-  - node_modules/.bin/newman --version
    
 addons:
   sonarcloud:
@@ -26,8 +20,8 @@ addons:
     
 jobs:
   include:
-  #  - stage: continousIntegration
-  #    script: ./gradlew sonarqube
+    - stage: continousIntegration
+      script: ./gradlew sonarqube
     - stage: continousDelivery
       deploy:
         provider: heroku
